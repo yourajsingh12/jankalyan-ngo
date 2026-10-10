@@ -14,21 +14,6 @@ function about_content_redirect(): never
     redirect('about_content.php');
 }
 
-function valid_about_path(string $path): bool
-{
-    if ($path === '' || preg_match('/[\x00-\x20]/', $path)) {
-        return false;
-    }
-
-    if (preg_match('#^https?://#i', $path)) {
-        return filter_var($path, FILTER_VALIDATE_URL) !== false;
-    }
-
-    return !str_starts_with($path, '//')
-        && !preg_match('/^[a-z][a-z0-9+.-]*:/i', $path)
-        && !str_contains($path, '\\');
-}
-
 $fields = [
     'page_title' => ['section' => 'page', 'column' => 'heading', 'label' => 'Breadcrumb title', 'default' => 'About Us', 'type' => 'text', 'max' => 120],
     'intro_tagline' => ['section' => 'intro', 'column' => 'tagline', 'label' => 'Introduction tagline', 'default' => 'About Us', 'type' => 'text', 'max' => 160],
@@ -51,7 +36,6 @@ $fields = [
     'programs_value' => ['section' => 'counter_programs', 'column' => 'heading', 'label' => 'Community programs count', 'default' => '25', 'type' => 'number', 'max' => 8],
     'programs_label' => ['section' => 'counter_programs', 'column' => 'body', 'label' => 'Programs counter label', 'default' => '+ Community Programs', 'type' => 'text', 'max' => 120],
     'explore_label' => ['section' => 'explore', 'column' => 'heading', 'label' => 'Explore button label', 'default' => 'Explore More', 'type' => 'text', 'max' => 60],
-    'explore_url' => ['section' => 'explore', 'column' => 'extra', 'label' => 'Explore button link', 'default' => 'mission.php', 'type' => 'path', 'max' => 255],
 ];
 
 $groups = [
@@ -69,7 +53,7 @@ $groups = [
     ],
     [
         'title' => 'About Us highlights',
-        'description' => 'Education and health highlight cards, including their icons.',
+        'description' => 'Education and health highlight card text.',
         'icon' => 'fa-heart',
         'fields' => ['education_title', 'education_description', 'health_title', 'health_description'],
     ],
@@ -81,9 +65,9 @@ $groups = [
     ],
     [
         'title' => 'Explore button',
-        'description' => 'Set the call-to-action text and where it links.',
+        'description' => 'Update the call-to-action text.',
         'icon' => 'fa-arrow-up-right-from-square',
-        'fields' => ['explore_label', 'explore_url'],
+        'fields' => ['explore_label'],
     ],
 ];
 
@@ -105,10 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
         }
         if ($field['type'] === 'number' && !preg_match('/^\d+$/', $value)) {
-            $invalid = true;
-            break;
-        }
-        if ($field['type'] === 'path' && !valid_about_path($value)) {
             $invalid = true;
             break;
         }
@@ -152,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sectionKey = $field['section'];
         $sectionsToSave[$sectionKey][$field['column']] = $values[$key];
     }
+    $sectionsToSave['explore']['extra'] = $aboutSections['explore']['extra'] ?? 'mission.php';
 
     try {
         db()->beginTransaction();

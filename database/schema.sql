@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS focus_areas (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   title       VARCHAR(160) NOT NULL,
   description TEXT         NULL,
+  detail      LONGTEXT     NULL,
   icon        VARCHAR(255) NULL,
   image       VARCHAR(255) NULL,
   link_url    VARCHAR(255) NOT NULL DEFAULT 'donate.php',
@@ -156,6 +157,9 @@ CREATE TABLE IF NOT EXISTS focus_areas (
   updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY idx_order (status, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE focus_areas
+  ADD COLUMN IF NOT EXISTS detail LONGTEXT NULL AFTER description;
 
 
 -- The mission page's focus cards are separate from the homepage programme list.

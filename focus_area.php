@@ -1,10 +1,24 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
 
-$focusId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$focusArea = $focusId !== false && $focusId !== null && $focusId > 0
-    ? row('SELECT id, title, description, detail, image, icon, sort_order FROM home_features WHERE id = ? AND status = 1', [$focusId])
-    : null;
+$focusId = filter_input(INPUT_GET, 'focus_id', FILTER_VALIDATE_INT);
+$legacyFeatureId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$focusArea = null;
+if ($focusId !== false && $focusId !== null && $focusId > 0) {
+    $focusArea = row(
+        'SELECT id, title, description, detail, image, icon, sort_order
+           FROM focus_areas
+          WHERE id = ? AND status = 1',
+        [$focusId]
+    );
+} elseif ($legacyFeatureId !== false && $legacyFeatureId !== null && $legacyFeatureId > 0) {
+    $focusArea = row(
+        'SELECT id, title, description, detail, image, icon, sort_order
+           FROM home_features
+          WHERE id = ? AND status = 1',
+        [$legacyFeatureId]
+    );
+}
 
 if ($focusArea === null) {
     http_response_code(404);

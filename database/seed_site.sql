@@ -145,11 +145,23 @@ INSERT INTO home_features (title, description, detail, image, icon, sort_order, 
 -- =============================================================================
 DELETE FROM focus_areas;
 
-INSERT INTO focus_areas (title, description, icon, image, link_url, link_label, sort_order, status) VALUES
-('Education Support',  'We promote access to school, learning materials, and academic encouragement for children.', 'assets/img/icon/student-visa.svg',    'assets/img/visa/seva1.png', 'donate.php', 'Support Now', 1, 1),
-('Health & Nutrition', 'Regular health camps, nutrition distribution, and awareness programs improve everyday well-being.', 'assets/img/icon/tourist-visa.svg', 'assets/img/visa/seva2.png', 'donate.php', 'Donate',      2, 1),
-('Women Empowerment',  'We support women through awareness, confidence-building, skill development, and inclusive participation.', 'assets/img/icon/commercial-visa.svg', 'assets/img/visa/seva1.png', 'donate.php', 'Join Us',  3, 1),
-('Community Support',  'From emergency relief to local development, we stand beside communities in need.', 'assets/img/icon/residence-visa.svg',  'assets/img/visa/seva2.png', 'donate.php', 'Help Today',  4, 1);
+INSERT INTO focus_areas (title, description, detail, icon, image, link_url, link_label, sort_order, status) VALUES
+('Education Support',
+ 'We promote access to school, learning materials, and academic encouragement for children.',
+ 'We help children continue their education by supporting access to school and learning materials, and by encouraging regular participation in learning. Families and community partners can help identify barriers that make it harder for children to attend and progress.\n\nThrough practical guidance and academic encouragement, children can build confidence, strengthen their skills, and explore future opportunities. Our education work aims to make learning more accessible and supportive for every child.',
+ 'assets/img/icon/student-visa.svg', 'assets/img/visa/seva1.png', 'donate.php', 'Support Now', 1, 1),
+('Health & Nutrition',
+ 'Regular health camps, nutrition distribution, and awareness programs improve everyday well-being.',
+ 'We support community well-being through health camps, nutrition assistance, and practical awareness activities. These efforts help families learn about everyday health needs and connect with basic support in a welcoming, community-based setting.\n\nBy sharing clear information and encouraging timely care, we aim to help children and adults make informed choices for their health. Our approach focuses on dignity, prevention, and making essential support easier to reach.',
+ 'assets/img/icon/tourist-visa.svg', 'assets/img/visa/seva2.png', 'donate.php', 'Donate', 2, 1),
+('Women Empowerment',
+ 'We support women through awareness, confidence-building, skill development, and inclusive participation.',
+ 'We work to strengthen women''s confidence, skills, and participation in community life. Awareness activities and opportunities to learn practical skills can help women make informed choices and take part in decisions that affect their families and communities.\n\nWe believe lasting progress is built by listening to women, recognizing their abilities, and supporting equal participation. Our work encourages connection, learning, and opportunities for women to shape their own goals.',
+ 'assets/img/icon/commercial-visa.svg', 'assets/img/visa/seva1.png', 'donate.php', 'Join Us', 3, 1),
+('Community Support',
+ 'From emergency relief to local development, we stand beside communities in need.',
+ 'We work alongside communities during difficult times and support locally identified development priorities. Emergency assistance can help families address immediate needs, while continued cooperation helps communities plan for longer-term well-being.\n\nBy listening to residents and connecting people with practical support, we encourage shared solutions and stronger local participation. Our aim is to stand with communities with respect, care, and a commitment to sustainable progress.',
+ 'assets/img/icon/residence-visa.svg', 'assets/img/visa/seva2.png', 'donate.php', 'Help Today', 4, 1);
 
 
 -- =============================================================================

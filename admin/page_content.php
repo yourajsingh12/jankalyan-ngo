@@ -29,7 +29,7 @@ require_once __DIR__ . '/../includes/functions.php';
                         <div class="white_card_body p-4">
                             <div class="mb-3" style="font-size:2rem; color:#0f766e;"><i class="fas fa-house"></i></div>
                             <h4>Home Page Content</h4>
-                            <p class="text-muted">Edit homepage headings, features, call to action, and Get Involved items.</p>
+                            <p class="text-muted">Edit homepage content in page order: highlight cards, Focus Areas, call to action, and Get Involved.</p>
                             <a href="editor.php" class="btn btn-success"><i class="fas fa-edit"></i> Edit Home Page</a>
                         </div>
                     </div>

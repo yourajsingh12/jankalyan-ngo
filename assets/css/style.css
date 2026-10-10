@@ -1283,7 +1283,7 @@ label {
 @media all and (min-width: 992px) {
 
   .navbar .nav-item .nav-link {
-    margin-right: 22px;
+    margin-right: 40px;
     padding: 30px 0 30px 0;
     font-size: 17px;
     font-weight: 600;
@@ -1524,7 +1524,7 @@ label {
 
 @media all and (max-width: 1199px) {
   .navbar .nav-item .nav-link {
-    margin-right: 15px;
+    margin-right: 28px;
   }
 
   .nav-right {
@@ -6175,4 +6175,3 @@ label {
 }
 
 /* ================= end ================== */
-

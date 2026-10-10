@@ -12,6 +12,12 @@ $homeFeatures = rows(
 	  WHERE status = 1
 	  ORDER BY sort_order ASC, id ASC'
 );
+$focusAreas = rows(
+	'SELECT id, title, description, icon, image, sort_order
+	   FROM focus_areas
+	  WHERE status = 1
+	  ORDER BY sort_order ASC, id ASC'
+);
 $homeSections = sections('home');
 $homeCta = $homeSections['cta'] ?? [];
 $homeFocus = $homeSections['focus'] ?? [];
@@ -79,30 +85,30 @@ $homeSteps = rows(
 				</div>
 				<div class="visa-wrap wow fadeInUp" data-wow-delay=".25s">
 					<div class="visa-slider owl-carousel">
-						<?php foreach ($homeFeatures as $index => $feature):
-							$focusDetailUrl = 'focus_area.php?id=' . (int) $feature['id'];
-							$focusImage = img_url((string) ($feature['image'] ?? ''), $index % 2 === 0 ? 'assets/img/visa/seva1.png' : 'assets/img/visa/seva2.png');
+						<?php foreach ($focusAreas as $index => $focusArea):
+							$focusDetailUrl = 'focus_area.php?focus_id=' . (int) $focusArea['id'];
+							$focusImage = img_url((string) ($focusArea['image'] ?? ''), $index % 2 === 0 ? 'assets/img/visa/seva1.png' : 'assets/img/visa/seva2.png');
 						?>
 							<div class="visa-item">
-								<a href="<?= e($focusDetailUrl) ?>" class="focus-area-card-link" aria-label="View <?= e($feature['title']) ?> details">
+								<a href="<?= e($focusDetailUrl) ?>" class="focus-area-card-link" aria-label="View <?= e($focusArea['title']) ?> details">
 									<span class="count"><?= e(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)) ?></span>
 									<div class="visa-content">
 										<div class="visa-icon">
-											<img src="<?= e(img_url((string) ($feature['icon'] ?? ''), 'assets/img/icon/team.svg')) ?>" alt="">
+											<img src="<?= e(img_url((string) ($focusArea['icon'] ?? ''), 'assets/img/icon/team.svg')) ?>" alt="">
 										</div>
 										<div class="visa-info">
-											<h4 class="visa-title"><?= e($feature['title']) ?></h4>
-											<p class="visa-text"><?= e(excerpt((string) ($feature['description'] ?? ''), 150)) ?></p>
+											<h4 class="visa-title"><?= e($focusArea['title']) ?></h4>
+											<p class="visa-text"><?= e(excerpt((string) ($focusArea['description'] ?? ''), 150)) ?></p>
 											<span class="theme-btn">View Details <i class="fas fa-circle-arrow-right"></i></span>
 										</div>
 									</div>
 									<div class="visa-img">
-										<img src="<?= e($focusImage) ?>" alt="<?= e($feature['title']) ?>">
+										<img src="<?= e($focusImage) ?>" alt="<?= e($focusArea['title']) ?>">
 									</div>
 								</a>
 							</div>
 						<?php endforeach; ?>
-						<?php if ($homeFeatures === []): ?>
+						<?php if ($focusAreas === []): ?>
 							<p class="text-center">Our focus area details will be added soon.</p>
 						<?php endif; ?>
 					</div>

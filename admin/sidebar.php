@@ -1,7 +1,7 @@
 <nav class="sidebar dark_sidebar">
         <div class="logo d-flex justify-editor-between">
-            <a class="large_logo" href="index-2.php"><img src="img/logo_white.png" alt=""></a>
-            <a class="small_logo" href="index-2.php"><img src="img/mini_logo.png" alt=""></a>
+            <a class="large_logo" href="index.php"><img src="img/logo_white.png" alt=""></a>
+            <a class="small_logo" href="index.php"><img src="img/mini_logo.png" alt=""></a>
             <div class="sidebar_close_icon d-lg-none">
                 <i class="ti-close"></i>
             </div>

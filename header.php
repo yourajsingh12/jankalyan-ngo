@@ -6,6 +6,10 @@ $headerTickerItems = rows(
 $socialLinks = rows(
     'SELECT platform, icon_class, url FROM social_links WHERE status = 1 ORDER BY sort_order ASC, id ASC'
 );
+$contactEmail = setting('contact_email');
+$contactPhone = setting('contact_phone');
+$contactPhoneHref = preg_replace('/[^0-9+]/', '', $contactPhone);
+$contactAddress = setting('contact_address_plain');
 ?>
 
 <!-- header area -->
@@ -14,8 +18,11 @@ $socialLinks = rows(
     <!-- header top -->
     <div class="header-top">
         <div class="container">
+        
             <div class="header-top-wrap">
+            
                 <div class="header-top-left">
+                    
                     <?php if ($headerTickerItems !== []): ?>
                         <div class="header-top-list">
                             <div class="header-top-track">
@@ -29,6 +36,7 @@ $socialLinks = rows(
                     <?php endif; ?>
                 </div>
                 <div class="header-top-right">
+                    
                     <div class="header-top-social">
                         <span>Follow Us: </span>
                         <?php foreach ($socialLinks as $socialLink): ?>
@@ -73,13 +81,26 @@ $socialLinks = rows(
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1">
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-                            <li class="nav-item"><a class="nav-link" href="certificate.php">Certificate</a></li>
-                            <li class="nav-item"><a class="nav-link" href="achievements.php">Achievements</a></li>
-                            <li class="nav-item"><a class="nav-link" href="projects.php">Projects</a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">About</a>
+                                <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                                    <li><a class="dropdown-item" href="about.php">About Us</a></li>
+                                    <li><a class="dropdown-item" href="achievements.php">Achievements</a></li>
+                                    <li><a class="dropdown-item" href="projects.php">Projects</a></li>
+                                    <li><a class="dropdown-item" href="certificate.php">Certificate</a></li>
+                                </ul>
+                            </li>
                             <li class="nav-item"><a class="nav-link" href="team.php">Team</a></li>
                             <li class="nav-item"><a class="nav-link" href="mission.php">Mission</a></li>
-                            <li class="nav-item"><a class="nav-link" href="participate.php">Participate</a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="participate.php" id="participateDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Participate</a>
+                                <ul class="dropdown-menu" aria-labelledby="participateDropdown">
+                                    <li><a class="dropdown-item" href="participate.php">Participate With Us</a></li>
+                                    <li><a class="dropdown-item" href="participant_login.php"><i class="fas fa-id-card"></i> Participant Login</a></li>
+                                </ul>
+                            </li>
                             <li class="nav-item"><a class="nav-link" href="gallery.php">Gallery</a></li>
                             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
                         
@@ -120,10 +141,7 @@ $socialLinks = rows(
     </div>
     <div class="sidebar-popup-wrap offcanvas-body">
         <div class="sidebar-popup-content">
-            <div class="sidebar-popup-about">
-                <h4>About Us</h4>
-                <p>There are many loan options available in the market, but choosing the right one can be confusing. Our experts ensure you get the most suitable loan with transparent terms, quick processing, and complete guidance at every step. We make the entire loan process simple, secure, and stress-free for you.</p>
-            </div>
+            
             <div class="sidebar-popup-contact">
                 <h4>Contact Info</h4>
                 <ul>
@@ -133,7 +151,7 @@ $socialLinks = rows(
                         </div>
                         <div class="content">
                             <h6>Email</h6>
-                            <a href="mailto:support@jankalyansanghfoundation.com">support@jankalyansanghfoundation.com</a>
+                            <a href="mailto:<?= e($contactEmail) ?>"><?= e($contactEmail) ?></a>
                         </div>
                     </li>
                     <li>
@@ -142,7 +160,7 @@ $socialLinks = rows(
                         </div>
                         <div class="content">
                             <h6>Phone</h6>
-                            <a href="tel:+918929939502">+91 8929939502</a>
+                            <a href="tel:<?= e($contactPhoneHref) ?>"><?= e($contactPhone) ?></a>
                         </div>
                     </li>
                     <li>
@@ -151,9 +169,7 @@ $socialLinks = rows(
                         </div>
                         <div class="content">
                             <h6>Address</h6>
-                            <a href="#">252-A/2, KH No-44/18,<br>
-                            Nangli Vihar Extn., Baprola BLK C5&amp;C6,<br>
-                            New Delhi, India</a>
+                            <a href="#"><?= nl2br(e($contactAddress)) ?></a>
                         </div>
                     </li>
                 </ul>

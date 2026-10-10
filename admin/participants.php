@@ -208,6 +208,27 @@ if ($viewId !== null && $viewId !== false) {
     }
 }
 
+$idCardInput = is_string($_GET['id-card'] ?? null) ? $_GET['id-card'] : '';
+$idCardId = $idCardInput === '' ? null : filter_var($idCardInput, FILTER_VALIDATE_INT);
+$idCardParticipant = null;
+if ($idCardInput !== '') {
+    if ($idCardId === false || $idCardId < 1) {
+        flash('That participant ID card could not be found.', 'error');
+        participant_admin_redirect();
+    }
+
+    $idCardParticipant = row(
+        'SELECT id, full_name, mobile, email, designation, profile_photo, status
+           FROM participants
+          WHERE id = ?',
+        [$idCardId]
+    );
+    if ($idCardParticipant === null || (int) $idCardParticipant['status'] !== 1) {
+        flash('ID cards are available only for approved participants.', 'error');
+        participant_admin_redirect();
+    }
+}
+
 $participants = rows(
     'SELECT id, full_name, email, mobile, designation, submitted_at, status
        FROM participants
@@ -222,6 +243,90 @@ $messages = take_flash();
 <body class="crm_body_bg">
     <?php include_once __DIR__ . '/sidebar.php'; ?>
 
+    <style>
+        .participant-id-card {
+            display: flex; flex-direction: column; width: min(440px, 100%); aspect-ratio: 1.585 / 1;
+            overflow: hidden; color: #172554; background: #fff; border: 1px solid #c7d2fe;
+            border-radius: 18px; box-shadow: 0 22px 55px rgba(30, 58, 138, .2); font-family: Arial, sans-serif;
+        }
+        .participant-id-card__header {
+            display: flex; align-items: center; gap: 12px; min-height: 29%; padding: 12px 18px;
+            color: #fff; background: linear-gradient(115deg, #101b73, #1836b8 66%, #274bd8);
+            border-bottom: 3px solid #e32636;
+        }
+        .participant-id-card__logo {
+            width: 54px; height: 54px; flex: 0 0 auto; object-fit: contain;
+        }
+        .participant-id-card__org { min-width: 0; font-size: 13px; font-weight: 800; line-height: 1.2; letter-spacing: .045em; }
+        .participant-id-card__org small {
+            display: block; margin-top: 4px; color: #dbeafe; font-size: 8px; font-weight: 600; letter-spacing: .14em;
+        }
+        .participant-id-card__tag {
+            margin-left: auto; padding: 6px 9px; border: 1px solid #facc15; border-radius: 999px;
+            color: #fff; font-size: 8px; font-weight: 800; letter-spacing: .1em; white-space: nowrap;
+        }
+        .participant-id-card__body { display: flex; align-items: center; gap: 16px; flex: 1; min-height: 0; padding: 13px 18px 10px; }
+        .participant-id-card__photo, .participant-id-card__initial {
+            display: flex; align-items: center; justify-content: center; width: 82px; height: 96px; flex: 0 0 auto;
+            border: 3px solid #c7d2fe; border-radius: 12px; background: #eef2ff; color: #1d4ed8;
+            font-size: 27px; font-weight: 800; object-fit: cover;
+        }
+        .participant-id-card__details { min-width: 0; flex: 1; }
+        .participant-id-card__name {
+            margin: 0 0 3px; overflow: hidden; color: #172554; font-size: 17px; font-weight: 800;
+            line-height: 1.15; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .participant-id-card__designation {
+            margin-bottom: 9px; color: #1d4ed8; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .08em;
+        }
+        .participant-id-card__detail { display: flex; gap: 6px; margin-top: 4px; overflow: hidden; color: #475569; font-size: 9px; line-height: 1.25; }
+        .participant-id-card__detail strong {
+            flex: 0 0 35px; color: #64748b; font-size: 8px; text-transform: uppercase; letter-spacing: .04em;
+        }
+        .participant-id-card__detail span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .participant-id-card__footer {
+            display: flex; align-items: center; justify-content: space-between; min-height: 15%;
+            padding: 7px 18px; color: #eff6ff; background: #101b73; border-top: 2px solid #e32636;
+            font-size: 8px; letter-spacing: .04em;
+        }
+        .participant-id-card__number { color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .11em; }
+        .participant-id-print-area {
+            display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px;
+            background: #eff6ff; border: 1px solid #c7d2fe; border-radius: 18px;
+        }
+        @media print {
+            @page { size: 85.6mm 54mm; margin: 0; }
+            html, body { width: 85.6mm; height: 54mm; margin: 0 !important; padding: 0 !important; background: #fff !important; }
+            body * { visibility: hidden !important; }
+            .participant-id-print-area, .participant-id-print-area * { visibility: visible !important; }
+            .participant-id-print-area {
+                position: fixed; inset: 0; display: block; width: 85.6mm; height: 54mm; margin: 0; padding: 0;
+                border: 0; border-radius: 0; background: #fff;
+            }
+            .participant-id-card {
+                width: 85.6mm; height: 54mm; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none;
+                print-color-adjust: exact; -webkit-print-color-adjust: exact;
+            }
+            .participant-id-card__header { gap: 2.5mm; padding: 2.5mm 3.5mm; }
+            .participant-id-card__logo { width: 11mm; height: 11mm; }
+            .participant-id-card__org { font-size: 8pt; }
+            .participant-id-card__org small { margin-top: .7mm; font-size: 5pt; }
+            .participant-id-card__tag { padding: 1.2mm 1.8mm; font-size: 5pt; }
+            .participant-id-card__body { gap: 3mm; padding: 2.5mm 3.5mm 2mm; }
+            .participant-id-card__photo, .participant-id-card__initial {
+                width: 17mm; height: 21mm; border-width: .6mm; border-radius: 2mm; font-size: 15pt;
+            }
+            .participant-id-card__name { margin-bottom: .5mm; font-size: 10pt; }
+            .participant-id-card__designation { margin-bottom: 1.5mm; font-size: 6pt; }
+            .participant-id-card__detail { gap: 1mm; margin-top: .7mm; font-size: 5.5pt; }
+            .participant-id-card__detail strong { flex-basis: 8mm; font-size: 4.5pt; }
+            .participant-id-card__footer { min-height: 8mm; padding: 1.5mm 3.5mm; font-size: 5pt; }
+            .participant-id-card__number { font-size: 6pt; }
+            .participant-id-print-actions, .participant-id-download-message { display: none !important; }
+        }
+    </style>
+
     <section class="main_content dashboard_part large_header_bg" style="padding:24px;">
         <div class="container-fluid g-0">
             <div class="page_title_box d-flex flex-wrap justify-content-between align-items-center"
@@ -231,6 +336,44 @@ $messages = take_flash();
                     <i class="far fa-users"></i> Participation Panel
                 </div>
             </div>
+
+            <?php if ($idCardParticipant !== null): ?>
+                <div class="participant-id-print-area mb-4" id="participant-id-card">
+                    <div class="participant-id-card" aria-label="ID card for <?= e($idCardParticipant['full_name']) ?>">
+                        <div class="participant-id-card__header">
+                            <img class="participant-id-card__logo" src="<?= e(base_url('admin/img/logo_white.png')) ?>" alt="Jan Kalyan logo">
+                            <div class="participant-id-card__org">
+                                JAN KALYAN SANGH FOUNDATION
+                                <small>PUBLIC WELFARE • COMMUNITY SERVICE</small>
+                            </div>
+                            <span class="participant-id-card__tag">IDENTITY CARD</span>
+                        </div>
+                        <div class="participant-id-card__body">
+                            <?php if (!empty($idCardParticipant['profile_photo'])): ?>
+                                <img class="participant-id-card__photo" src="<?= e(img_url((string) $idCardParticipant['profile_photo'])) ?>" alt="<?= e($idCardParticipant['full_name']) ?>">
+                            <?php else: ?>
+                                <div class="participant-id-card__initial" aria-hidden="true"><?= e(mb_strtoupper(mb_substr((string) $idCardParticipant['full_name'], 0, 1))) ?></div>
+                            <?php endif; ?>
+                            <div class="participant-id-card__details">
+                                <h3 class="participant-id-card__name"><?= e($idCardParticipant['full_name']) ?></h3>
+                                <div class="participant-id-card__designation"><?= e($idCardParticipant['designation']) ?></div>
+                                <div class="participant-id-card__detail"><strong>Mobile</strong><span><?= e($idCardParticipant['mobile']) ?></span></div>
+                                <div class="participant-id-card__detail"><strong>Email</strong><span><?= e($idCardParticipant['email']) ?></span></div>
+                            </div>
+                        </div>
+                        <div class="participant-id-card__footer">
+                            <span>APPROVED PARTICIPANT</span>
+                            <span class="participant-id-card__number">ID: JKSF-<?= e(str_pad((string) $idCardParticipant['id'], 6, '0', STR_PAD_LEFT)) ?></span>
+                        </div>
+                    </div>
+                    <div class="participant-id-print-actions d-flex flex-wrap justify-content-center gap-2">
+                        <button type="button" class="btn btn-primary" data-download-id-card><i class="fas fa-download"></i> Download ID card</button>
+                        <button type="button" class="btn btn-success" onclick="window.print()"><i class="fas fa-print"></i> Print ID card</button>
+                        <a class="btn btn-outline-secondary" href="participants.php#participant-records"><i class="fas fa-arrow-left"></i> Back to records</a>
+                    </div>
+                    <div class="participant-id-download-message text-danger small text-center" role="status" aria-live="polite"></div>
+                </div>
+            <?php endif; ?>
 
             <?php foreach ($messages as $message): ?>
                 <div class="alert alert-<?= $message['type'] === 'error' ? 'danger' : 'success' ?>" role="<?= $message['type'] === 'error' ? 'alert' : 'status' ?>"><?= e($message['message']) ?></div>
@@ -391,7 +534,7 @@ $messages = take_flash();
                 </div>
             </div>
 
-            <div class="white_card mb_30" style="background:#fff; border-radius:20px; box-shadow:0 14px 28px rgba(15,23,42,.06); border:1px solid rgba(148,163,184,.2);">
+            <div class="white_card mb_30" id="participant-records" style="background:#fff; border-radius:20px; box-shadow:0 14px 28px rgba(15,23,42,.06); border:1px solid rgba(148,163,184,.2);">
                 <div class="white_card_body" style="padding:20px;">
                     <h4 class="mb-4" style="font-size:1.25rem; font-weight:700; color:#0f172a;">Participation Records</h4>
                     <div class="table-responsive">
@@ -425,6 +568,11 @@ $messages = take_flash();
                                                 <a href="participants.php?edit=<?= e($person['id']) ?>#participant-form" class="btn btn-sm btn-primary" title="Edit" aria-label="Edit participant" style="background:#0f766e; border:none; border-radius:8px;">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                <?php if ($approved): ?>
+                                                    <a href="participants.php?id-card=<?= e($person['id']) ?>#participant-id-card" class="btn btn-sm btn-light" title="Generate ID card" aria-label="Generate ID card for <?= e($person['full_name']) ?>" style="border:1px solid #99f6e4; border-radius:8px; color:#0f766e;">
+                                                        <i class="fas fa-id-card"></i>
+                                                    </a>
+                                                <?php endif; ?>
                                                 <form method="post">
                                                     <?= csrf_field() ?>
                                                     <input type="hidden" name="action" value="toggle-approval">
@@ -452,6 +600,182 @@ $messages = take_flash();
             </div>
         </div>
     </section>
+
+    <?php if ($idCardParticipant !== null): ?>
+        <script>
+            (() => {
+                const downloadButton = document.querySelector('[data-download-id-card]');
+                const card = document.querySelector('.participant-id-card');
+                const message = document.querySelector('.participant-id-download-message');
+
+                if (!downloadButton || !card || !message) {
+                    return;
+                }
+
+                const loadImage = (source) => new Promise((resolve, reject) => {
+                    const image = new Image();
+                    image.onload = () => resolve(image);
+                    image.onerror = () => reject(new Error('An image on the ID card could not be loaded.'));
+                    image.src = source;
+                });
+
+                downloadButton.addEventListener('click', async () => {
+                    downloadButton.disabled = true;
+                    message.textContent = '';
+
+                    try {
+                        const scale = 3;
+                        const width = 440 * scale;
+                        const height = Math.round(width / 1.585);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const context = canvas.getContext('2d');
+
+                        if (!context) {
+                            throw new Error('Your browser could not prepare the ID card image.');
+                        }
+
+                        const ratio = width / 440;
+                        const roundRect = (x, y, w, h, radius) => {
+                            context.beginPath();
+                            context.roundRect(x, y, w, h, radius);
+                        };
+                        const drawImageCover = (image, x, y, w, h, radius) => {
+                            context.save();
+                            roundRect(x, y, w, h, radius);
+                            context.clip();
+                            const factor = Math.max(w / image.width, h / image.height);
+                            const imageWidth = image.width * factor;
+                            const imageHeight = image.height * factor;
+                            context.drawImage(image, x + (w - imageWidth) / 2, y + (h - imageHeight) / 2, imageWidth, imageHeight);
+                            context.restore();
+                        };
+
+                        context.fillStyle = '#ffffff';
+                        context.fillRect(0, 0, width, height);
+                        context.strokeStyle = '#c7d2fe';
+                        context.lineWidth = 2 * ratio;
+                        roundRect(1, 1, width - 2, height - 2, 18 * ratio);
+                        context.stroke();
+                        context.save();
+                        roundRect(1, 1, width - 2, height - 2, 18 * ratio);
+                        context.clip();
+
+                        const headerHeight = height * 0.29;
+                        const gradient = context.createLinearGradient(0, 0, width, headerHeight);
+                        gradient.addColorStop(0, '#101b73');
+                        gradient.addColorStop(0.66, '#1836b8');
+                        gradient.addColorStop(1, '#274bd8');
+                        context.fillStyle = gradient;
+                        context.fillRect(0, 0, width, headerHeight);
+                        context.fillStyle = '#e32636';
+                        context.fillRect(0, headerHeight - 3 * ratio, width, 3 * ratio);
+
+                        const logo = await loadImage(card.querySelector('.participant-id-card__logo').src);
+                        context.drawImage(logo, 18 * ratio, (headerHeight - 54 * ratio) / 2, 54 * ratio, 54 * ratio);
+
+                        context.fillStyle = '#ffffff';
+                        context.font = `800 ${13 * ratio}px Arial`;
+                        context.textBaseline = 'middle';
+                        context.fillText('JAN KALYAN SANGH FOUNDATION', 82 * ratio, headerHeight / 2 - 5 * ratio);
+                        context.fillStyle = '#dbeafe';
+                        context.font = `600 ${8 * ratio}px Arial`;
+                        context.fillText('PUBLIC WELFARE • COMMUNITY SERVICE', 82 * ratio, headerHeight / 2 + 10 * ratio);
+
+                        const tagX = width - 18 * ratio - 95 * ratio;
+                        context.strokeStyle = '#facc15';
+                        context.lineWidth = ratio;
+                        roundRect(tagX, (headerHeight - 25 * ratio) / 2, 95 * ratio, 25 * ratio, 13 * ratio);
+                        context.stroke();
+                        context.fillStyle = '#ffffff';
+                        context.font = `800 ${8 * ratio}px Arial`;
+                        context.textAlign = 'center';
+                        context.fillText('IDENTITY CARD', tagX + 47.5 * ratio, headerHeight / 2);
+                        context.textAlign = 'left';
+
+                        const bodyY = headerHeight;
+                        const photoX = 18 * ratio;
+                        const photoY = bodyY + 13 * ratio;
+                        const photoW = 82 * ratio;
+                        const photoH = 96 * ratio;
+                        const photo = card.querySelector('.participant-id-card__photo');
+                        context.fillStyle = '#eef2ff';
+                        context.strokeStyle = '#c7d2fe';
+                        context.lineWidth = 3 * ratio;
+                        roundRect(photoX, photoY, photoW, photoH, 12 * ratio);
+                        context.fill();
+                        context.stroke();
+
+                        if (photo) {
+                            const participantPhoto = await loadImage(photo.src);
+                            drawImageCover(participantPhoto, photoX + 3 * ratio, photoY + 3 * ratio, photoW - 6 * ratio, photoH - 6 * ratio, 9 * ratio);
+                        } else {
+                            context.fillStyle = '#1d4ed8';
+                            context.font = `800 ${27 * ratio}px Arial`;
+                            context.textAlign = 'center';
+                            context.fillText(card.querySelector('.participant-id-card__initial').textContent.trim(), photoX + photoW / 2, photoY + photoH / 2);
+                            context.textAlign = 'left';
+                        }
+
+                        const detailsX = 116 * ratio;
+                        context.fillStyle = '#172554';
+                        context.font = `800 ${17 * ratio}px Arial`;
+                        context.fillText(card.querySelector('.participant-id-card__name').textContent.trim(), detailsX, bodyY + 33 * ratio, width - detailsX - 18 * ratio);
+                        context.fillStyle = '#1d4ed8';
+                        context.font = `700 ${10 * ratio}px Arial`;
+                        context.fillText(card.querySelector('.participant-id-card__designation').textContent.trim(), detailsX, bodyY + 52 * ratio, width - detailsX - 18 * ratio);
+
+                        const details = [...card.querySelectorAll('.participant-id-card__detail')];
+                        details.forEach((detail, index) => {
+                            const y = bodyY + (72 + index * 15) * ratio;
+                            context.fillStyle = '#64748b';
+                            context.font = `700 ${8 * ratio}px Arial`;
+                            context.fillText(detail.querySelector('strong').textContent.trim().toUpperCase(), detailsX, y);
+                            context.fillStyle = '#475569';
+                            context.font = `${9 * ratio}px Arial`;
+                            context.fillText(detail.querySelector('span').textContent.trim(), detailsX + 42 * ratio, y, width - detailsX - 60 * ratio);
+                        });
+
+                        const footerY = height * 0.85;
+                        context.fillStyle = '#101b73';
+                        context.fillRect(0, footerY, width, height - footerY);
+                        context.fillStyle = '#e32636';
+                        context.fillRect(0, footerY, width, 2 * ratio);
+                        context.fillStyle = '#eff6ff';
+                        context.font = `600 ${8 * ratio}px Arial`;
+                        context.fillText('APPROVED PARTICIPANT', 18 * ratio, footerY + (height - footerY) / 2 + ratio);
+                        const cardNumber = card.querySelector('.participant-id-card__number').textContent.trim();
+                        context.fillStyle = '#ffffff';
+                        context.font = `800 ${10 * ratio}px Arial`;
+                        context.textAlign = 'right';
+                        context.fillText(cardNumber, width - 18 * ratio, footerY + (height - footerY) / 2 + ratio);
+                        context.textAlign = 'left';
+                        context.restore();
+
+                        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+                        if (!blob) {
+                            throw new Error('The ID card image could not be generated. Please try again.');
+                        }
+
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = `${cardNumber.replace(/[^a-zA-Z0-9-]/g, '-')}.png`;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+                    } catch (error) {
+                        console.error('ID card download failed:', error);
+                        message.textContent = error instanceof Error ? error.message : 'The ID card could not be downloaded. Please try again.';
+                    } finally {
+                        downloadButton.disabled = false;
+                    }
+                });
+            })();
+        </script>
+    <?php endif; ?>
 
     <?php include_once __DIR__ . '/footer.php'; ?>
 </body>
