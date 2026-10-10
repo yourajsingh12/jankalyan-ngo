@@ -1,3 +1,46 @@
+<?php
+require_once __DIR__ . '/includes/functions.php';
+
+$achievementSections = sections('achievements');
+$achievementIntro = $achievementSections['intro'] ?? [];
+
+$achievementStats = [
+    ['key' => 'lives', 'value' => '6,500+', 'label' => 'Lives Touched', 'description' => 'Families reached through community programs.', 'icon' => 'assets/img/icon/happy.svg'],
+    ['key' => 'volunteers', 'value' => '48+', 'label' => 'Active Volunteers', 'description' => 'People giving their time and skills.', 'icon' => 'assets/img/icon/team.svg'],
+    ['key' => 'communities', 'value' => '25+', 'label' => 'Communities', 'description' => 'Local areas supported with care.', 'icon' => 'assets/img/icon/country.svg'],
+    ['key' => 'service', 'value' => '12+', 'label' => 'Years Of Service', 'description' => 'A continuing journey of public service.', 'icon' => 'assets/img/icon/award.svg'],
+];
+
+foreach ($achievementStats as &$stat) {
+    $savedStat = $achievementSections['stat_' . $stat['key']] ?? [];
+    $stat['value'] = $savedStat['heading'] ?? $stat['value'];
+    $stat['label'] = $savedStat['subheading'] ?? $stat['label'];
+    $stat['description'] = $savedStat['body'] ?? $stat['description'];
+}
+unset($stat);
+
+$defaultAchievements = [
+    ['year' => '2014', 'title' => 'Umeed Foundation Begins', 'description' => 'Started with a simple commitment to support families and strengthen local communities.', 'image' => 'assets/img/gallery/01.jpg', 'icon' => 'assets/img/icon/award.svg'],
+    ['year' => '2017', 'title' => 'Health & Nutrition Outreach', 'description' => 'Expanded health checkups, nutrition distribution and awareness activities for families in need.', 'image' => 'assets/img/gallery/02.jpg', 'icon' => 'assets/img/icon/quality-service.svg'],
+    ['year' => '2020', 'title' => 'Education Support Program', 'description' => 'Introduced learning support and educational resources to help children continue their studies.', 'image' => 'assets/img/gallery/03.jpg', 'icon' => 'assets/img/icon/student-visa.svg'],
+    ['year' => '2023', 'title' => 'Volunteer Network Grows', 'description' => 'Built a growing network of volunteers, partners and community leaders working for lasting change.', 'image' => 'assets/img/gallery/04.jpg', 'icon' => 'assets/img/icon/team.svg'],
+];
+
+try {
+    $achievementItems = rows(
+        'SELECT title, description, year, image, icon
+         FROM achievements
+         WHERE status = 1
+         ORDER BY sort_order ASC, year DESC, id DESC'
+    );
+} catch (PDOException $e) {
+    $achievementItems = [];
+}
+
+if ($achievementItems === [] || $achievementItems === false) {
+    $achievementItems = $defaultAchievements;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once __DIR__ . '/head.php'; ?>
@@ -188,16 +231,22 @@
         <section class="py-100">
             <div class="container">
                 <div class="achievement-intro">
-                    <span class="site-title-tagline"><i class="far fa-award"></i> Our Journey</span>
-                    <h1 class="site-title">Progress powered by <span>people</span></h1>
-                    <p>Every milestone represents the trust of our supporters, the dedication of our volunteers and the strength of the communities we serve.</p>
+                    <span class="site-title-tagline"><i class="far fa-award"></i> <?= e($achievementIntro['tagline'] ?? 'Our Journey') ?></span>
+                    <h1 class="site-title"><?= e($achievementIntro['heading'] ?? 'Progress powered by people') ?></h1>
+                    <p><?= e($achievementIntro['body'] ?? 'Every milestone represents the trust of our supporters, the dedication of our volunteers and the strength of the communities we serve.') ?></p>
                 </div>
 
                 <div class="row g-4 mb-100">
-                    <div class="col-md-6 col-lg-3"><div class="impact-card"><div class="icon"><img src="assets/img/icon/happy.svg" alt=""></div><h3>6,500+</h3><h5>Lives Touched</h5><p class="mb-0">Families reached through community programs.</p></div></div>
-                    <div class="col-md-6 col-lg-3"><div class="impact-card"><div class="icon"><img src="assets/img/icon/team.svg" alt=""></div><h3>48+</h3><h5>Active Volunteers</h5><p class="mb-0">People giving their time and skills.</p></div></div>
-                    <div class="col-md-6 col-lg-3"><div class="impact-card"><div class="icon"><img src="assets/img/icon/country.svg" alt=""></div><h3>25+</h3><h5>Communities</h5><p class="mb-0">Local areas supported with care.</p></div></div>
-                    <div class="col-md-6 col-lg-3"><div class="impact-card"><div class="icon"><img src="assets/img/icon/award.svg" alt=""></div><h3>12+</h3><h5>Years Of Service</h5><p class="mb-0">A continuing journey of public service.</p></div></div>
+                    <?php foreach ($achievementStats as $stat): ?>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="impact-card">
+                                <div class="icon"><img src="<?= e(img_url($stat['icon'])) ?>" alt="<?= e($stat['label']) ?>"></div>
+                                <h3><?= e($stat['value']) ?></h3>
+                                <h5><?= e($stat['label']) ?></h5>
+                                <p class="mb-0"><?= e($stat['description']) ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <div class="row">
@@ -210,46 +259,20 @@
                 </div>
 
                 <div class="achievement-timeline">
-                    <div class="achievement-row">
-                        <span class="achievement-dot"></span>
-                        <article class="achievement-card">
-                            <div class="achievement-photo"><img src="assets/img/gallery/01.jpg" alt="Umeed Foundation beginning in 2014"></div>
-                            <img class="achievement-icon" src="assets/img/icon/award.svg" alt="">
-                            <span class="achievement-year">2014</span>
-                            <h4>Umeed Foundation Begins</h4>
-                            <p class="mb-0">Started with a simple commitment to support families and strengthen local communities.</p>
-                        </article>
-                    </div>
-                    <div class="achievement-row">
-                        <span class="achievement-dot"></span>
-                        <article class="achievement-card">
-                            <div class="achievement-photo"><img src="assets/img/gallery/02.jpg" alt="Health and nutrition outreach in 2017"></div>
-                            <img class="achievement-icon" src="assets/img/icon/quality-service.svg" alt="">
-                            <span class="achievement-year">2017</span>
-                            <h4>Health & Nutrition Outreach</h4>
-                            <p class="mb-0">Expanded health checkups, nutrition distribution and awareness activities for families in need.</p>
-                        </article>
-                    </div>
-                    <div class="achievement-row">
-                        <span class="achievement-dot"></span>
-                        <article class="achievement-card">
-                            <div class="achievement-photo"><img src="assets/img/gallery/03.jpg" alt="Education support program in 2020"></div>
-                            <img class="achievement-icon" src="assets/img/icon/student-visa.svg" alt="">
-                            <span class="achievement-year">2020</span>
-                            <h4>Education Support Program</h4>
-                            <p class="mb-0">Introduced learning support and educational resources to help children continue their studies.</p>
-                        </article>
-                    </div>
-                    <div class="achievement-row">
-                        <span class="achievement-dot"></span>
-                        <article class="achievement-card">
-                            <div class="achievement-photo"><img src="assets/img/gallery/04.jpg" alt="Volunteer network growth in 2023"></div>
-                            <img class="achievement-icon" src="assets/img/icon/team.svg" alt="">
-                            <span class="achievement-year">2023</span>
-                            <h4>Volunteer Network Grows</h4>
-                            <p class="mb-0">Built a growing network of volunteers, partners and community leaders working for lasting change.</p>
-                        </article>
-                    </div>
+                    <?php foreach ($achievementItems as $achievement): ?>
+                        <div class="achievement-row">
+                            <span class="achievement-dot"></span>
+                            <article class="achievement-card">
+                                <div class="achievement-photo">
+                                    <img src="<?= e(img_url($achievement['image'] ?? '')) ?>" alt="<?= e($achievement['title'] ?? 'Achievement') ?>">
+                                </div>
+                                <img class="achievement-icon" src="<?= e(img_url($achievement['icon'] ?? '')) ?>" alt="<?= e($achievement['title'] ?? 'Achievement') ?>">
+                                <span class="achievement-year"><?= e($achievement['year'] ?? '') ?></span>
+                                <h4><?= e($achievement['title'] ?? '') ?></h4>
+                                <p class="mb-0"><?= e($achievement['description'] ?? '') ?></p>
+                            </article>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>

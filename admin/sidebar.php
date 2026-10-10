@@ -12,7 +12,7 @@
             <li class="">
                 <a href="index.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/dashboard.svg" alt="">
+                        <i class="fas fa-tachometer-alt"></i>
                     </div>
                     <div class="nav_title">
                         <span>Dashboard</span>
@@ -20,12 +20,21 @@
                 </a>
             </li>
 
-
+            <li class="">
+                <a href="index.php#contact-messages" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Contact Messages</span>
+                    </div>
+                </a>
+            </li>
 
             <li class="">
-                <a href="editor.php" aria-expanded="false">
+                <a href="page_content.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-pen"></i>
                     </div>
                     <div class="nav_title">
                         <span>Add Content</span>
@@ -33,11 +42,54 @@
                 </a>
             </li>
 
-            
+            <li class="">
+                <a href="header_content.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Header Content</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="footer_content.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Footer Content</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="testimonials.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Testimonials</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="social_links.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Social Media Links</span>
+                    </div>
+                </a>
+            </li>
+
             <li class="">
                 <a href="banner.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/3.svg" alt="">
+                        <i class="fas fa-images"></i>
                     </div>
                     <div class="nav_title">
                         <span>Add Banner</span>
@@ -48,7 +100,7 @@
             <li class="">
                 <a href="mission.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-bullseye"></i>
                     </div>
                     <div class="nav_title">
                         <span>Mission & Vision</span>
@@ -59,7 +111,7 @@
             <li class="">
                 <a href="participants.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-users"></i>
                     </div>
                     <div class="nav_title">
                         <span>Participants</span>
@@ -70,7 +122,7 @@
             <li class="">
                 <a href="achievements.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-award"></i>
                     </div>
                     <div class="nav_title">
                         <span>Achievements</span>
@@ -81,7 +133,7 @@
             <li class="">
                 <a href="projects.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-project-diagram"></i>
                     </div>
                     <div class="nav_title">
                         <span>Projects</span>
@@ -92,7 +144,7 @@
             <li class="">
                 <a href="team.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-user-friends"></i>
                     </div>
                     <div class="nav_title">
                         <span>Team</span>
@@ -103,7 +155,7 @@
             <li class="">
                 <a href="certificates.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-certificate"></i>
                     </div>
                     <div class="nav_title">
                         <span>Certificates</span>
@@ -114,7 +166,7 @@
             <li class="">
                 <a href="donate.php" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/2.svg" alt="">
+                        <i class="fas fa-hand-holding-heart"></i>
                     </div>
                     <div class="nav_title">
                         <span>Donations</span>
@@ -122,28 +174,34 @@
                 </a>
             </li>
 
+            <li class="">
+                <a href="update_donate.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Edit Donate Page</span>
+                    </div>
+                </a>
+            </li>
 
-
-           
             <li class="">
                 <a class="has-arrow" href="#" aria-expanded="false">
                     <div class="nav_icon_small">
-                        <img src="img/menu-icon/4.svg" alt="">
+                        <i class="fas fa-cogs"></i>
                     </div>
                     <div class="nav_title">
-                        <span>Setting</span>    
+                        <span>Setting</span>
                     </div>
                 </a>
                 <ul>
-                    <li><a href="add_hostels.php">Add Hostels</a></li>   
-                    <li><a href="address.php">Update Address</a></li>
-                    <li><a href="gallery.php">Add Gallery</a></li>    
+                    <li><a href="gallery.php"><i class="fas fa-images me-2"></i>Add Gallery</a></li>
                 </ul>
             </li>
 
            <li class="logout-btn-container text-center" style="margin-top: 20px;">
                 <button onclick="confirmLogout(event)" class="logout-btn">
-                    <img src="img/menu-icon/logout.svg" alt="" style="width:18px; margin-right:8px;">
+                    <i class="fas fa-sign-out-alt" style="margin-right:8px;"></i>
                     Logout
                 </button>
            </li>
@@ -163,6 +221,46 @@
             top: 0 !important;
             width: 270px !important;
             z-index: 1040 !important;
+        }
+
+        .nav_icon_small {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(59,130,246,0.14), rgba(16,185,129,0.12));
+            color: #1d4ed8;
+            border: 1px solid rgba(59,130,246,0.12);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+            transition: all 0.3s ease;
+        }
+
+        .nav_icon_small i {
+            font-size: 15px;
+            line-height: 1;
+            color: #1d4ed8;
+        }
+
+        .sidebar #sidebar_menu > li a:hover .nav_icon_small,
+        .sidebar #sidebar_menu > li a.active .nav_icon_small,
+        .sidebar #sidebar_menu > li.mm-active > a .nav_icon_small {
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 8px 18px rgba(37,99,235,0.18);
+            transform: translateY(-1px);
+        }
+
+        .sidebar #sidebar_menu > li a:hover .nav_icon_small i,
+        .sidebar #sidebar_menu > li a.active .nav_icon_small i,
+        .sidebar #sidebar_menu > li.mm-active > a .nav_icon_small i {
+            color: #ffffff;
+        }
+
+        .sidebar #sidebar_menu > li ul li a i {
+            font-size: 12px;
+            color: inherit;
         }
 
         .main_content.dashboard_part {

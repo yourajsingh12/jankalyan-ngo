@@ -6,6 +6,25 @@ $homeBanners = rows(
 	 WHERE page_name = 'home' AND status = 'Active'
 	 ORDER BY sort_order ASC, id ASC"
 );
+$homeFeatures = rows(
+	'SELECT id, title, description, icon, image
+	   FROM home_features
+	  WHERE status = 1
+	  ORDER BY sort_order ASC, id ASC'
+);
+$homeSections = sections('home');
+$homeCta = $homeSections['cta'] ?? [];
+$homeFocus = $homeSections['focus'] ?? [];
+$homeInvolvement = $homeSections['involve'] ?? [];
+$ctaButton = explode('|', (string) ($homeCta['extra'] ?? 'Donate Now|donate.php'), 2);
+$ctaButtonLabel = trim((string) ($ctaButton[0] ?? '')) ?: 'Donate Now';
+$ctaButtonUrl = trim((string) ($ctaButton[1] ?? '')) ?: 'donate.php';
+$homeSteps = rows(
+	'SELECT title, description, icon, link_url
+	   FROM process_steps
+	  WHERE status = 1
+	  ORDER BY sort_order ASC, id ASC'
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,133 +49,62 @@ $homeBanners = rows(
 			<div class="container">
 				<div class="feature-wrapper">
 					<div class="row g-4">
-						<div class="col-md-6 col-lg-4">
-							<div class="feature-item">
-								<span class="count">01</span>
-								<div class="feature-icon"><img src="assets/img/icon/assistance.svg" alt="Education support"></div>
-								<div class="feature-content">
-									<h4>Education For All</h4>
-									<p>We support children's education through school access, learning resources, and mentorship.</p>
+						<?php foreach ($homeFeatures as $index => $feature): ?>
+							<div class="col-md-6 col-lg-4">
+								<div class="feature-item">
+									<span class="count"><?= e(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)) ?></span>
+									<div class="feature-icon"><img src="<?= e(img_url((string) ($feature['icon'] ?? ''), 'assets/img/icon/team.svg')) ?>" alt="<?= e($feature['title']) ?>"></div>
+									<div class="feature-content">
+										<h4><?= e($feature['title']) ?></h4>
+										<p><?= e($feature['description']) ?></p>
+										<a href="focus_area.php?id=<?= (int) $feature['id'] ?>" class="theme-btn">More Details <i class="fas fa-circle-arrow-right"></i></a>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-6 col-lg-4">
-							<div class="feature-item">
-								<span class="count">02</span>
-								<div class="feature-icon"><img src="assets/img/icon/happy.svg" alt="Health and nutrition"></div>
-								<div class="feature-content">
-									<h4>Health & Nutrition</h4>
-									<p>We organize health checkups, nutrition distribution, and awareness drives for rural families.</p>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-4">
-							<div class="feature-item">
-								<span class="count">03</span>
-								<div class="feature-icon"><img src="assets/img/icon/team.svg" alt="Community development"></div>
-								<div class="feature-content">
-									<h4>Community Development</h4>
-									<p>We work with local communities to build dignity, opportunity, and sustainable growth.</p>
-								</div>
-							</div>
-						</div>
+						<?php endforeach; ?>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<div class="visa-area bg-2 pt-80 pb-120">
+		<div class="visa-area bg-2 pt-80 pb-120" id="focus-areas">
 			<div class="container pb-80">
 				<div class="row">
 					<div class="col-lg-8 mx-auto wow fadeInDown" data-wow-delay=".25s">
 						<div class="site-heading text-center">
-							<span class="site-title-tagline"><i class="far fa-hands-helping"></i> Our Focus Areas</span>
-							<h2 class="site-title">Building a <span>stronger</span> and healthier society</h2>
+							<span class="site-title-tagline"><i class="far fa-hands-helping"></i> <?= e($homeFocus['tagline'] ?? 'Our Focus Areas') ?></span>
+							<h2 class="site-title"><?= e(strip_tags((string) ($homeFocus['heading'] ?? 'Building a stronger and healthier society'))) ?></h2>
 						</div>
 					</div>
 				</div>
 				<div class="visa-wrap wow fadeInUp" data-wow-delay=".25s">
 					<div class="visa-slider owl-carousel">
-						<div class="visa-item">
-							<span class="count">01</span>
-							<div class="visa-content">
-								<div class="visa-icon">
-									<img src="assets/img/icon/student-visa.svg" alt="Education for children">
-								</div>
-								<div class="visa-info">
-									<h4 class="visa-title">
-										<a href="donate.php">Education Support</a>
-									</h4>
-									<p class="visa-text">
-										We promote access to school, learning materials, and academic encouragement for children.
-									</p>
-									<a href="donate.php" class="theme-btn">Support Now<i class="fas fa-circle-arrow-right"></i></a>
-								</div>
+						<?php foreach ($homeFeatures as $index => $feature):
+							$focusDetailUrl = 'focus_area.php?id=' . (int) $feature['id'];
+							$focusImage = img_url((string) ($feature['image'] ?? ''), $index % 2 === 0 ? 'assets/img/visa/seva1.png' : 'assets/img/visa/seva2.png');
+						?>
+							<div class="visa-item">
+								<a href="<?= e($focusDetailUrl) ?>" class="focus-area-card-link" aria-label="View <?= e($feature['title']) ?> details">
+									<span class="count"><?= e(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)) ?></span>
+									<div class="visa-content">
+										<div class="visa-icon">
+											<img src="<?= e(img_url((string) ($feature['icon'] ?? ''), 'assets/img/icon/team.svg')) ?>" alt="">
+										</div>
+										<div class="visa-info">
+											<h4 class="visa-title"><?= e($feature['title']) ?></h4>
+											<p class="visa-text"><?= e(excerpt((string) ($feature['description'] ?? ''), 150)) ?></p>
+											<span class="theme-btn">View Details <i class="fas fa-circle-arrow-right"></i></span>
+										</div>
+									</div>
+									<div class="visa-img">
+										<img src="<?= e($focusImage) ?>" alt="<?= e($feature['title']) ?>">
+									</div>
+								</a>
 							</div>
-							<div class="visa-img">
-								<img src="assets/img/visa/seva1.png" alt="Children learning together">
-							</div>
-						</div>
-						<div class="visa-item">
-							<span class="count">02</span>
-							<div class="visa-content">
-								<div class="visa-icon">
-									<img src="assets/img/icon/tourist-visa.svg" alt="Health and nutrition">
-								</div>
-								<div class="visa-info">
-									<h4 class="visa-title">
-										<a href="donate.php">Health & Nutrition</a>
-									</h4>
-									<p class="visa-text">
-										Regular health camps, nutrition distribution, and awareness programs improve everyday well-being.
-									</p>
-									<a href="donate.php" class="theme-btn">Donate<i class="fas fa-circle-arrow-right"></i></a>
-								</div>
-							</div>
-							<div class="visa-img">
-								<img src="assets/img/visa/seva2.png" alt="Health camp for families">
-							</div>
-						</div>
-						<div class="visa-item">
-							<span class="count">03</span>
-							<div class="visa-content">
-								<div class="visa-icon">
-									<img src="assets/img/icon/commercial-visa.svg" alt="Women empowerment">
-								</div>
-								<div class="visa-info">
-									<h4 class="visa-title">
-										<a href="donate.php">Women Empowerment</a>
-									</h4>
-									<p class="visa-text">
-										We support women through awareness, confidence-building, skill development, and inclusive participation.
-									</p>
-									<a href="donate.php" class="theme-btn">Join Us<i class="fas fa-circle-arrow-right"></i></a>
-								</div>
-							</div>
-							<div class="visa-img">
-								<img src="assets/img/visa/seva1.png" alt="Women empowerment initiative">
-							</div>
-						</div>
-						<div class="visa-item">
-							<span class="count">04</span>
-							<div class="visa-content">
-								<div class="visa-icon">
-									<img src="assets/img/icon/residence-visa.svg" alt="Community support">
-								</div>
-								<div class="visa-info">
-									<h4 class="visa-title">
-										<a href="donate.php">Community Support</a>
-									</h4>
-									<p class="visa-text">
-										From emergency relief to local development, we stand beside communities in need.
-									</p>
-									<a href="donate.php" class="theme-btn">Help Today<i class="fas fa-circle-arrow-right"></i></a>
-								</div>
-							</div>
-							<div class="visa-img">
-								<img src="assets/img/visa/seva2.png" alt="Community development program">
-							</div>
-						</div>
+						<?php endforeach; ?>
+						<?php if ($homeFeatures === []): ?>
+							<p class="text-center">Our focus area details will be added soon.</p>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
@@ -168,16 +116,14 @@ $homeBanners = rows(
 					<div class="row align-items-center">
 						<div class="col-lg-6">
 							<div class="cta-img">
-								<img src="assets/img/cta/flood.png" alt="Jan Kalyan Sangh Foundation community outreach">
+								<img src="<?= e(img_url((string) ($homeCta['image'] ?? ''), 'assets/img/cta/flood.png')) ?>" alt="<?= e(strip_tags((string) ($homeCta['heading'] ?? 'Jan Kalyan Sangh Foundation community outreach'))) ?>">
 							</div>
 						</div>
 						<div class="col-lg-6">
 							<div class="cta-content">
-								<h1>We work for a <span>healthier, kinder, and stronger</span> tomorrow</h1>
-								<p>
-									Jan Kalyan Sangh Foundation is committed to empowering underserved communities through education, healthcare, social awareness, and community development.
-								</p>
-								<a href="donate.php" class="theme-btn2">Donate Now<i class="fas fa-circle-arrow-right"></i></a>
+								<h1><?= e(strip_tags((string) ($homeCta['heading'] ?? 'We work for a healthier, kinder, and stronger tomorrow'))) ?></h1>
+								<p><?= e($homeCta['body'] ?? 'Jan Kalyan Sangh Foundation is committed to empowering underserved communities through education, healthcare, social awareness, and community development.') ?></p>
+								<a href="<?= e($ctaButtonUrl) ?>" class="theme-btn2"><?= e($ctaButtonLabel) ?><i class="fas fa-circle-arrow-right"></i></a>
 								<div class="shape">
 									<img src="assets/img/shape/02.png" alt="shape">
 								</div>
@@ -193,16 +139,24 @@ $homeBanners = rows(
 				<div class="row">
 					<div class="col-lg-7 mx-auto">
 						<div class="site-heading text-center">
-							<span class="site-title-tagline"><i class="fas fa-hands-helping"></i> Get Involved</span>
-							<h2 class="site-title">Small actions create lasting change</h2>
+							<span class="site-title-tagline"><i class="fas fa-hands-helping"></i> <?= e($homeInvolvement['tagline'] ?? 'Get Involved') ?></span>
+							<h2 class="site-title"><?= e(strip_tags((string) ($homeInvolvement['heading'] ?? 'Small actions create lasting change'))) ?></h2>
 						</div>
 					</div>
 				</div>
 				<div class="row g-4">
-					<div class="col-md-6 col-lg-3"><div class="process-item"><span class="count">01</span><div class="process-icon"><img src="assets/img/icon/team.svg" alt="Volunteer"></div><div class="process-content"><h4>Volunteer</h4><p>Join our outreach programs and contribute your time, skills, and energy.</p></div></div></div>
-					<div class="col-md-6 col-lg-3"><div class="process-item mt-lg-5"><span class="count">02</span><div class="process-icon"><img src="assets/img/icon/loan.svg" alt="Support a program"></div><div class="process-content"><h4>Support A Program</h4><p>Your donation helps us provide education, food, care, and livelihood support.</p></div></div></div>
-					<div class="col-md-6 col-lg-3"><div class="process-item"><span class="count">03</span><div class="process-icon"><img src="assets/img/icon/document.svg" alt="Partner with us"></div><div class="process-content"><h4>Partner With Us</h4><p>Collaborate with us to expand social impact and serve more families.</p></div></div></div>
-					<div class="col-md-6 col-lg-3"><div class="process-item mt-lg-5"><span class="count">04</span><div class="process-icon"><img src="assets/img/icon/approval.svg" alt="Spread the word"></div><div class="process-content"><h4>Spread The Word</h4><p>Share our mission and inspire others to build a brighter future together.</p></div></div></div>
+					<?php foreach ($homeSteps as $index => $step): ?>
+						<div class="col-md-6 col-lg-3">
+							<div class="process-item <?= $index % 2 === 1 ? 'mt-lg-5' : '' ?>">
+								<span class="count"><?= e(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)) ?></span>
+								<div class="process-icon"><img src="<?= e(img_url((string) ($step['icon'] ?? ''), 'assets/img/icon/team.svg')) ?>" alt="<?= e($step['title']) ?>"></div>
+								<div class="process-content">
+									<h4><?= e($step['title']) ?></h4>
+									<p><?= e($step['description']) ?></p>
+								</div>
+							</div>
+						</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</section>

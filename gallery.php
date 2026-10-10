@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
+<?php
+require_once __DIR__ . '/includes/functions.php';
+$galleryImages = rows(
+    'SELECT image_path, title, alt_text
+       FROM gallery
+      WHERE status = 1
+      ORDER BY sort_order ASC, id DESC'
+);
+?>
 <?php include_once __DIR__ . '/head.php'; ?>
 
 <body>
@@ -36,94 +44,29 @@
                     </div>
                 </div>
                 <div class="row g-4 popup-gallery">
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay=".25s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/01.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/01.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay=".50s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/02.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/02.jpg"><i
-                                        class="fal fa-plus"></i></a>
+                    <?php foreach ($galleryImages as $index => $image):
+                        $imageUrl = img_url((string) $image['image_path']);
+                        $altText = trim((string) ($image['alt_text'] ?? ''));
+                        if ($altText === '') {
+                            $altText = trim((string) ($image['title'] ?? '')) ?: 'Jan Kalyan gallery photo';
+                        }
+                    ?>
+                        <div class="col-md-3">
+                            <div class="gallery-item wow fadeInUp" data-wow-delay="<?= e((($index % 4) + 1) * 0.25) ?>s">
+                                <div class="gallery-img">
+                                    <img src="<?= e($imageUrl) ?>" alt="<?= e($altText) ?>">
+                                </div>
+                                <div class="gallery-content">
+                                    <a class="popup-img gallery-link" href="<?= e($imageUrl) ?>" aria-label="View <?= e($altText) ?>"><i class="fal fa-plus"></i></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay=".75s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/03.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/03.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
+                    <?php endforeach; ?>
+                    <?php if ($galleryImages === []): ?>
+                        <div class="col-12">
+                            <p class="text-center">Gallery photos will be added soon.</p>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay="1s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/04.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/04.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay=".25s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/05.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/05.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay=".50s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/06.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/06.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay=".75s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/07.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/07.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="gallery-item wow fadeInUp" data-wow-delay="1s">
-                            <div class="gallery-img">
-                                <img src="assets/img/gallery/08.jpg" alt="">
-                            </div>
-                            <div class="gallery-content">
-                                <a class="popup-img gallery-link" href="assets/img/gallery/08.jpg"><i
-                                        class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -86,8 +86,8 @@ DELETE FROM social_links;
 INSERT INTO social_links (platform, icon_class, url, sort_order, status) VALUES
 ('Facebook',  'fab fa-facebook',    'https://www.facebook.com/profile.php?id=61560875186705', 1, 1),
 ('X',         'fab fa-x-twitter',   'https://x.com/official_jksf',                            2, 1),
-('LinkedIn',  'fab fa-linkedin-in', 'https://www.linkedin.com/in/jan-kalyan-sangh-foundation-82b770331/', 3, 1),
-('YouTube',   'fab fa-youtube',     'https://www.youtube.com/@JanKalyanSanghFoundation',      4, 1),
+('YouTube',   'fab fa-youtube',     'https://www.youtube.com/@JanKalyanSanghFoundation',      3, 1),
+('LinkedIn',  'fab fa-linkedin-in', 'https://www.linkedin.com/in/jan-kalyan-sangh-foundation-82b770331/', 4, 1),
 ('Instagram', 'fab fa-instagram',   'https://www.instagram.com/jankalyansanghfoundation/',    5, 1);
 
 
@@ -121,10 +121,23 @@ INSERT INTO banners (page_name, title, subtitle, image_path, link_url, link_labe
 -- =============================================================================
 DELETE FROM home_features;
 
-INSERT INTO home_features (title, description, icon, sort_order, status) VALUES
-('Education For All',     'We support children''s education through school access, learning resources, and mentorship.', 'assets/img/icon/assistance.svg', 1, 1),
-('Health & Nutrition',    'We organize health checkups, nutrition distribution, and awareness drives for rural families.', 'assets/img/icon/happy.svg', 2, 1),
-('Community Development', 'We work with local communities to build dignity, opportunity, and sustainable growth.', 'assets/img/icon/team.svg', 3, 1);
+ALTER TABLE home_features
+  ADD COLUMN IF NOT EXISTS detail LONGTEXT NULL AFTER description,
+  ADD COLUMN IF NOT EXISTS image VARCHAR(255) NULL AFTER detail;
+
+INSERT INTO home_features (title, description, detail, image, icon, sort_order, status) VALUES
+('Education For All',
+ 'We support children''s education through school access, learning resources, and mentorship.',
+ 'We support children''s education by helping them access school, learning resources, and caring mentorship. Our work encourages regular learning and gives children a safe space to build confidence and curiosity.\n\nBy working with families, schools, and local communities, we help identify barriers to education and connect children with practical support. We believe every child deserves the opportunity to learn, grow, and shape a brighter future.',
+ 'assets/img/visa/seva1.png', 'assets/img/icon/assistance.svg', 1, 1),
+('Health & Nutrition',
+ 'We organize health checkups, nutrition distribution, and awareness drives for rural families.',
+ 'We organize health checkups, nutrition distribution, and awareness activities for rural families. These services help people access basic care, understand everyday health needs, and seek timely support.\n\nOur outreach works alongside local communities to make health information easier to reach and to encourage healthier practices for children and families. We aim to support well-being with care, dignity, and sustained community participation.',
+ 'assets/img/visa/seva2.png', 'assets/img/icon/happy.svg', 2, 1),
+('Community Development',
+ 'We work with local communities to build dignity, opportunity, and sustainable growth.',
+ 'We work with local communities to strengthen dignity, opportunity, and sustainable growth. Community members help identify priorities and take part in shaping practical solutions that respond to local needs.\n\nThrough awareness, collaboration, and inclusive support, we encourage families to access opportunities and build resilience. Our goal is lasting progress led with and for the communities we serve.',
+ 'assets/img/visa/seva1.png', 'assets/img/icon/team.svg', 3, 1);
 
 
 -- =============================================================================

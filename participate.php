@@ -1,8 +1,16 @@
 <?php
-$successMessage = '';
-if (isset($_GET['success']) && $_GET['success'] == '1') {
-    $successMessage = "<div class='alert alert-success mt-3'>Your participation form has been submitted successfully. Our team will contact you soon.</div>";
-}
+require_once __DIR__ . '/includes/functions.php';
+start_session();
+
+$errorMessages = [
+    '1' => 'Please complete all required fields.',
+    '2' => 'Password and confirmation do not match.',
+    '3' => 'Password must contain between 6 and 255 characters.',
+    '4' => 'Please check your details and enter valid information.',
+    '5' => 'The profile photo could not be uploaded. Please use a JPG, PNG, WEBP or GIF image.',
+    '6' => 'Your form could not be saved. Please try again later.',
+];
+$errorCode = is_string($_GET['error'] ?? null) ? $_GET['error'] : '';
 ?>
 
 <?php include_once __DIR__ . '/head.php'; ?>
@@ -167,35 +175,41 @@ if (isset($_GET['success']) && $_GET['success'] == '1') {
                 </div>
 
                 <div class="participate-form">
-                    <?php echo $successMessage; ?>
+                    <?php if (($_GET['success'] ?? '') === '1'): ?>
+                        <div class="alert alert-success mt-3" role="status">Your participation form has been submitted successfully. It is pending approval, and our team will contact you soon.</div>
+                    <?php endif; ?>
+                    <?php if (isset($errorMessages[$errorCode])): ?>
+                        <div class="alert alert-danger mt-3" role="alert"><?= e($errorMessages[$errorCode]) ?></div>
+                    <?php endif; ?>
 
                     <form action="participate_submit.php" method="POST" enctype="multipart/form-data">
+                        <?= csrf_field() ?>
                         <div class="section-title">Personal Information / व्यक्तिगत जानकारी</div>
 
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Full Name *</label>
-                                <input type="text" class="form-control" name="full_name" placeholder="Enter full name" required>
+                                <input type="text" class="form-control" name="full_name" placeholder="Enter full name" maxlength="255" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Mobile Number *</label>
-                                <input type="tel" class="form-control" name="mobile" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}" required>
+                                <input type="tel" class="form-control" name="mobile" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Email Address *</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter email address" required>
+                                <input type="email" class="form-control" name="email" placeholder="Enter email address" maxlength="190" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Password *</label>
-                                <input type="password" class="form-control" name="password" placeholder="Minimum 6 characters" minlength="6" required>
+                                <input id="participate-password" type="password" class="form-control" name="password" placeholder="Minimum 6 characters" minlength="6" maxlength="255" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Confirm Password *</label>
-                                <input type="password" class="form-control" name="confirm_password" placeholder="Re-enter password" minlength="6" required>
+                                <input id="participate-confirm-password" type="password" class="form-control" name="confirm_password" placeholder="Re-enter password" minlength="6" maxlength="255" required>
                             </div>
 
                             <div class="col-md-6">
@@ -252,12 +266,12 @@ if (isset($_GET['success']) && $_GET['success'] == '1') {
 
                             <div class="col-md-6">
                                 <label class="form-label">Father / Husband Name *</label>
-                                <input type="text" class="form-control" name="guardian_name" placeholder="Father / Husband name" required>
+                                <input type="text" class="form-control" name="guardian_name" placeholder="Father / Husband name" maxlength="255" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Aadhar Number *</label>
-                                <input type="text" class="form-control" name="aadhar" placeholder="XXXX XXXX XXXX" maxlength="12" pattern="[0-9]{12}" required>
+                                <input type="text" class="form-control" name="aadhar" placeholder="12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}" inputmode="numeric" required>
                             </div>
                         </div>
 
@@ -318,12 +332,12 @@ if (isset($_GET['success']) && $_GET['success'] == '1') {
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="form-label">Address *</label>
-                                <textarea name="address" placeholder="House No, Street, Area" required></textarea>
+                                <textarea name="address" maxlength="2000" placeholder="House No, Street, Area" required></textarea>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label">Pin Code *</label>
-                                <input type="text" class="form-control" name="pincode" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit PIN code" required>
+                                <input type="text" class="form-control" name="pincode" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" placeholder="6-digit PIN code" required>
                             </div>
 
                             <div class="col-md-4">
@@ -359,9 +373,9 @@ if (isset($_GET['success']) && $_GET['success'] == '1') {
                             <div class="col-md-12">
                                 <div class="upload-box">
                                     <label for="profile_photo">
-                                        <input type="file" id="profile_photo" name="profile_photo" accept="image/png,image/jpeg,image/jpg">
+                                        <input type="file" id="profile_photo" name="profile_photo" accept="image/png,image/jpeg,image/webp,image/gif">
                                         <span>Upload Profile Photo</span>
-                                        <div class="helper-text">Click to upload (JPG, PNG — Any size, auto-compressed)</div>
+                                        <div class="helper-text">Click to upload (JPG, PNG, WEBP or GIF)</div>
                                     </label>
                                 </div>
                             </div>
@@ -406,5 +420,18 @@ if (isset($_GET['success']) && $_GET['success'] == '1') {
     </main>
 
     <?php include_once __DIR__ . '/footer.php'; ?>
+    <script>
+        const passwordField = document.getElementById('participate-password');
+        const confirmPasswordField = document.getElementById('participate-confirm-password');
+        const validatePasswordMatch = () => {
+            confirmPasswordField.setCustomValidity(
+                confirmPasswordField.value !== '' && confirmPasswordField.value !== passwordField.value
+                    ? 'Passwords do not match.'
+                    : ''
+            );
+        };
+        passwordField.addEventListener('input', validatePasswordMatch);
+        confirmPasswordField.addEventListener('input', validatePasswordMatch);
+    </script>
 </body>
 </html>

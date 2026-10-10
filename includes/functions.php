@@ -66,6 +66,41 @@ function last_id(): int
     return (int) db()->lastInsertId();
 }
 
+/**
+ * Creates the participant table when the database schema has not been
+ * installed yet.
+ */
+function ensure_participants_table(): void
+{
+    db()->exec(
+        'CREATE TABLE IF NOT EXISTS participants (
+            id              INT AUTO_INCREMENT PRIMARY KEY,
+            full_name       VARCHAR(255) NOT NULL,
+            mobile          VARCHAR(10) NOT NULL,
+            email           VARCHAR(190) NOT NULL,
+            password_hash   VARCHAR(255) NULL,
+            dob             DATE NOT NULL,
+            gender          VARCHAR(20) NOT NULL,
+            marital_status  VARCHAR(20) NOT NULL,
+            guardian_name   VARCHAR(255) NOT NULL,
+            aadhar          VARCHAR(12) NOT NULL,
+            category        VARCHAR(40) NOT NULL,
+            blood_group     VARCHAR(3) NULL,
+            occupation      VARCHAR(80) NOT NULL,
+            address         TEXT NOT NULL,
+            pincode         VARCHAR(6) NOT NULL,
+            state           VARCHAR(80) NOT NULL,
+            district        VARCHAR(80) NOT NULL,
+            designation     VARCHAR(80) NOT NULL,
+            profile_photo   VARCHAR(255) NULL,
+            status          TINYINT(1) NOT NULL DEFAULT 0,
+            submitted_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_participants_status (status, submitted_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+    );
+}
+
 /* ==========================================================================
    OUTPUT
    ========================================================================== */

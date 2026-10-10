@@ -1,3 +1,13 @@
+<?php
+require_once __DIR__ . '/includes/functions.php';
+$headerTickerItems = rows(
+    'SELECT text FROM ticker_items WHERE status = 1 ORDER BY sort_order ASC, id ASC'
+);
+$socialLinks = rows(
+    'SELECT platform, icon_class, url FROM social_links WHERE status = 1 ORDER BY sort_order ASC, id ASC'
+);
+?>
+
 <!-- header area -->
 <header class="header">
 
@@ -6,25 +16,24 @@
         <div class="container">
             <div class="header-top-wrap">
                 <div class="header-top-left">
-                    <div class="header-top-list">
-                        <div class="header-top-track">
-                            <span>Health Checkup & Nutrition Distribution</span>
-                            <span>Development Program for Weaker Community</span>
-                            <span>De-Addiction Awareness Program</span>
-                            <span>Health Checkup & Nutrition Distribution</span>
-                            <span>Development Program for Weaker Community</span>
-                            <span>De-Addiction Awareness Program</span>
+                    <?php if ($headerTickerItems !== []): ?>
+                        <div class="header-top-list">
+                            <div class="header-top-track">
+                                <?php for ($copy = 0; $copy < 2; $copy++): ?>
+                                    <?php foreach ($headerTickerItems as $item): ?>
+                                        <span><?= e($item['text']) ?></span>
+                                    <?php endforeach; ?>
+                                <?php endfor; ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
                 <div class="header-top-right">
                     <div class="header-top-social">
                         <span>Follow Us: </span>
-                        <a href="https://www.facebook.com/profile.php?id=61560875186705" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>
-                        <a href="https://x.com/official_jksf" target="_blank" rel="noopener" aria-label="X"><i class="fab fa-x-twitter"></i></a>
-                        <a href="https://www.linkedin.com/in/jan-kalyan-sangh-foundation-82b770331/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.youtube.com/@JanKalyanSanghFoundation" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://www.instagram.com/jankalyansanghfoundation/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <?php foreach ($socialLinks as $socialLink): ?>
+                            <a href="<?= e($socialLink['url']) ?>" target="_blank" rel="noopener" aria-label="<?= e($socialLink['platform']) ?>"><i class="<?= e($socialLink['icon_class']) ?>"></i></a>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -151,11 +160,9 @@
             </div>
             <div class="sidebar-popup-social">
                 <h4>Follow Us</h4>
-                <a href="https://www.facebook.com/profile.php?id=61560875186705" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>
-                <a href="https://x.com/official_jksf" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
-                <a href="https://www.linkedin.com/in/jan-kalyan-sangh-foundation-82b770331/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.youtube.com/@JanKalyanSanghFoundation" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
-                <a href="https://www.instagram.com/jankalyansanghfoundation/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                <?php foreach ($socialLinks as $socialLink): ?>
+                    <a href="<?= e($socialLink['url']) ?>" target="_blank" rel="noopener" aria-label="<?= e($socialLink['platform']) ?>"><i class="<?= e($socialLink['icon_class']) ?>"></i></a>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

@@ -1,3 +1,15 @@
+<?php
+require_once __DIR__ . '/includes/functions.php';
+$footerAbout = setting('footer_about');
+$contactAddress = setting('contact_address_plain');
+$contactPhone = setting('contact_phone');
+$contactPhoneHref = preg_replace('/[^0-9+]/', '', $contactPhone);
+$contactEmail = setting('contact_email');
+$footerSocialLinks = rows(
+    'SELECT platform, icon_class, url FROM social_links WHERE status = 1 ORDER BY sort_order ASC, id ASC'
+);
+?>
+
 <!-- footer area -->
     <footer class="footer-area">
         <div class="footer-shape">
@@ -14,7 +26,7 @@
                                     <img src="assets/img/logo/study.png" alt="Jan Kalyan Sangh Foundation logo">
                                 </a>
                                 <p class="mb-4">
-                                    We build a stronger tomorrow by supporting education, health, dignity, and community development for underserved families across India.
+                                    <?= e($footerAbout) ?>
                                 </p>
                                 <div class="footer-newsletter">
                                     <h6>Subscribe Our Newsletter</h6>
@@ -73,9 +85,7 @@
                                         </div>
                                         <div class="content">
                                             <h6>Head Office</h6>
-                                            <p>252-A/2, KH No-44/18,<br>
-                                            Nangli Vihar Extn., Baprola BLK C5&amp;C6,<br>
-                                            New Delhi, India</p>
+                                            <p><?= nl2br(e($contactAddress)) ?></p>
                                         </div>
                                     </li>
                                     <li>
@@ -84,7 +94,7 @@
                                         </div>
                                         <div class="content">
                                             <h6>Call Us</h6>
-                                            <a href="tel:+918929939502">+91 8929939502</a>
+                                            <a href="tel:<?= e($contactPhoneHref) ?>"><?= e($contactPhone) ?></a>
                                         </div>
                                     </li>
                                     <li>
@@ -93,7 +103,7 @@
                                         </div>
                                         <div class="content">
                                             <h6>Mail Us</h6>
-                                            <a href="mailto:support@jankalyansanghfoundation.com">support@jankalyansanghfoundation.com</a>
+                                            <a href="mailto:<?= e($contactEmail) ?>"><?= e($contactEmail) ?></a>
                                         </div>
                                     </li>
                                 </ul>
@@ -115,11 +125,9 @@
                     </div>
                     <div class="col-md-6 align-self-center">
                         <ul class="footer-social">
-                            <li><a href="https://www.facebook.com/profile.php?id=61560875186705" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="https://x.com/official_jksf" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a></li>
-                            <li><a href="https://www.linkedin.com/in/jan-kalyan-sangh-foundation-82b770331/" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li><a href="https://www.youtube.com/@JanKalyanSanghFoundation" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="https://www.instagram.com/jankalyansanghfoundation/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a></li>
+                            <?php foreach ($footerSocialLinks as $socialLink): ?>
+                                <li><a href="<?= e($socialLink['url']) ?>" target="_blank" rel="noopener" aria-label="<?= e($socialLink['platform']) ?>"><i class="<?= e($socialLink['icon_class']) ?>"></i></a></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>

@@ -1,3 +1,11 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/includes/functions.php';
+start_session();
+
+$submissionStatus = is_string($_GET['status'] ?? null) ? $_GET['status'] : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -90,14 +98,27 @@
                                     <p>Feel free to reach out to us anytime. We are here to assist you with your questions, services, or support needs.</p>
                                 </div>
 
-                                <div class="form-message"></div>
+                                <?php if ($submissionStatus === 'success'): ?>
+                                    <div class="form-message alert alert-success" role="status">
+                                        Thank you for contacting us. Your message has been received.
+                                    </div>
+                                <?php elseif ($submissionStatus === 'invalid'): ?>
+                                    <div class="form-message alert alert-danger" role="alert">
+                                        Please check your details and make sure your message is between 10 and 5,000 characters.
+                                    </div>
+                                <?php elseif ($submissionStatus === 'error'): ?>
+                                    <div class="form-message alert alert-danger" role="alert">
+                                        We could not send your message right now. Please try again shortly.
+                                    </div>
+                                <?php endif; ?>
                                 <form method="post" action="send-mail.php" id="contact-form">
+                                    <?= csrf_field() ?>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <div class="form-icon">
                                                     <i class="far fa-user-tie"></i>
-                                                    <input type="text" class="form-control" name="name" placeholder="Your Name" required>
+                                                    <input type="text" class="form-control" name="name" placeholder="Your Name" autocomplete="name" minlength="2" maxlength="160" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -106,7 +127,7 @@
                                             <div class="form-group">
                                                 <div class="form-icon">
                                                     <i class="far fa-envelope"></i>
-                                                    <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                                                    <input type="email" class="form-control" name="email" placeholder="Your Email" autocomplete="email" maxlength="190" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -114,8 +135,15 @@
 
                                     <div class="form-group">
                                         <div class="form-icon">
+                                            <i class="far fa-phone"></i>
+                                            <input type="tel" class="form-control" name="phone" placeholder="Your Mobile Number" autocomplete="tel" inputmode="numeric" minlength="10" maxlength="10" pattern="[6-9][0-9]{9}" title="Enter a valid 10-digit Indian mobile number" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-icon">
                                             <i class="far fa-pen"></i>
-                                            <input type="text" class="form-control" name="subject" placeholder="Your Subject" required>
+                                            <input type="text" class="form-control" name="subject" placeholder="Your Subject" maxlength="255" required>
                                         </div>
                                     </div>
 
@@ -123,7 +151,7 @@
                                         <div class="form-icon">
                                             <i class="far fa-comment-lines"></i>
                                             <textarea name="message" cols="30" rows="5" class="form-control"
-                                                placeholder="Write Your Message" required></textarea>
+                                                placeholder="Write Your Message" minlength="10" maxlength="5000" required></textarea>
                                         </div>
                                     </div>
 

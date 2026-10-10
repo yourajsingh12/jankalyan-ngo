@@ -130,6 +130,8 @@ CREATE TABLE IF NOT EXISTS home_features (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   title       VARCHAR(160) NOT NULL,
   description TEXT         NULL,
+  detail      LONGTEXT     NULL,
+  image       VARCHAR(255) NULL,
   icon        VARCHAR(255) NULL,
   sort_order  INT          NOT NULL DEFAULT 0,
   status      TINYINT(1)   NOT NULL DEFAULT 1,
@@ -153,6 +155,21 @@ CREATE TABLE IF NOT EXISTS focus_areas (
   created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY idx_order (status, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- The mission page's focus cards are separate from the homepage programme list.
+CREATE TABLE IF NOT EXISTS mission_focus_areas (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  title       VARCHAR(160) NOT NULL,
+  description TEXT         NULL,
+  icon        VARCHAR(255) NULL,
+  sort_order  INT          NOT NULL DEFAULT 0,
+  status      TINYINT(1)   NOT NULL DEFAULT 1,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_mission_focus_title (title),
+  KEY idx_mission_focus_order (status, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -333,13 +350,74 @@ ALTER TABLE banners
   ADD COLUMN IF NOT EXISTS link_label VARCHAR(60)  NULL AFTER link_url,
   ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0 AFTER link_label;
 
+CREATE TABLE IF NOT EXISTS team_members (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  name        VARCHAR(255) NOT NULL,
+  position    VARCHAR(160) NOT NULL,
+  email       VARCHAR(190) NULL,
+  phone       VARCHAR(32) NULL,
+  image       VARCHAR(255) NULL,
+  bio         TEXT NULL,
+  facebook    VARCHAR(255) NULL,
+  twitter     VARCHAR(255) NULL,
+  linkedin    VARCHAR(255) NULL,
+  instagram   VARCHAR(255) NULL,
+  sort_order  INT NOT NULL DEFAULT 0,
+  status      VARCHAR(20) NOT NULL DEFAULT 'Active',
+  created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_team_order (status, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS participants (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  full_name       VARCHAR(255) NOT NULL,
+  mobile          VARCHAR(10) NOT NULL,
+  email           VARCHAR(190) NOT NULL,
+  password_hash   VARCHAR(255) NULL,
+  dob             DATE NOT NULL,
+  gender          VARCHAR(20) NOT NULL,
+  marital_status  VARCHAR(20) NOT NULL,
+  guardian_name   VARCHAR(255) NOT NULL,
+  aadhar          VARCHAR(12) NOT NULL,
+  category        VARCHAR(40) NOT NULL,
+  blood_group     VARCHAR(3) NULL,
+  occupation      VARCHAR(80) NOT NULL,
+  address         TEXT NOT NULL,
+  pincode         VARCHAR(6) NOT NULL,
+  state           VARCHAR(80) NOT NULL,
+  district        VARCHAR(80) NOT NULL,
+  designation     VARCHAR(80) NOT NULL,
+  profile_photo   VARCHAR(255) NULL,
+  status          TINYINT(1) NOT NULL DEFAULT 0,
+  submitted_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_participants_status (status, submitted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 ALTER TABLE team_members
-  ADD COLUMN IF NOT EXISTS bio        TEXT         NULL AFTER image,
-  ADD COLUMN IF NOT EXISTS facebook   VARCHAR(255) NULL AFTER bio,
-  ADD COLUMN IF NOT EXISTS twitter    VARCHAR(255) NULL AFTER facebook,
-  ADD COLUMN IF NOT EXISTS linkedin   VARCHAR(255) NULL AFTER twitter,
-  ADD COLUMN IF NOT EXISTS instagram  VARCHAR(255) NULL AFTER linkedin,
-  ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0 AFTER instagram;
+  ADD COLUMN IF NOT EXISTS position   VARCHAR(160) NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS email      VARCHAR(190) NULL,
+  ADD COLUMN IF NOT EXISTS phone      VARCHAR(32) NULL,
+  ADD COLUMN IF NOT EXISTS image      VARCHAR(255) NULL,
+  ADD COLUMN IF NOT EXISTS bio        TEXT NULL,
+  ADD COLUMN IF NOT EXISTS facebook   VARCHAR(255) NULL,
+  ADD COLUMN IF NOT EXISTS twitter    VARCHAR(255) NULL,
+  ADD COLUMN IF NOT EXISTS linkedin   VARCHAR(255) NULL,
+  ADD COLUMN IF NOT EXISTS instagram  VARCHAR(255) NULL,
+  ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS status     VARCHAR(20) NOT NULL DEFAULT 'Active',
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE team_members
+  MODIFY status VARCHAR(20) NOT NULL DEFAULT 'Active';
+
+UPDATE team_members
+   SET status = CASE
+       WHEN LOWER(CAST(status AS CHAR)) IN ('0', 'inactive', 'hidden') THEN 'Inactive'
+       ELSE 'Active'
+   END;
 
 ALTER TABLE gallery
   ADD COLUMN IF NOT EXISTS title      VARCHAR(255) NULL AFTER image_path,
@@ -348,12 +426,50 @@ ALTER TABLE gallery
   ADD COLUMN IF NOT EXISTS status     TINYINT(1) NOT NULL DEFAULT 1 AFTER sort_order,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
+CREATE TABLE IF NOT EXISTS achievements (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  title       VARCHAR(255) NOT NULL,
+  description TEXT         NULL,
+  category    VARCHAR(80)  NULL,
+  year        VARCHAR(10)  NULL,
+  highlight   VARCHAR(160) NULL,
+  image       VARCHAR(255) NULL,
+  icon        VARCHAR(255) NULL,
+  sort_order  INT          NOT NULL DEFAULT 0,
+  status      TINYINT(1)   NOT NULL DEFAULT 1,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_order (status, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 ALTER TABLE achievements
   ADD COLUMN IF NOT EXISTS category   VARCHAR(80)  NULL AFTER description,
   ADD COLUMN IF NOT EXISTS year       VARCHAR(10)  NULL AFTER category,
   ADD COLUMN IF NOT EXISTS highlight  VARCHAR(160) NULL AFTER year,
+  ADD COLUMN IF NOT EXISTS image      VARCHAR(255) NULL AFTER highlight,
   ADD COLUMN IF NOT EXISTS icon       VARCHAR(255) NULL AFTER image,
-  ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0 AFTER icon;
+  ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0 AFTER icon,
+  ADD COLUMN IF NOT EXISTS status     TINYINT(1) NOT NULL DEFAULT 1 AFTER sort_order;
+
+CREATE TABLE IF NOT EXISTS projects (
+  id            INT AUTO_INCREMENT PRIMARY KEY,
+  name          VARCHAR(255) NOT NULL,
+  slug          VARCHAR(255) NULL,
+  location      VARCHAR(255) NULL,
+  category      VARCHAR(80)  NULL,
+  description   TEXT         NULL,
+  beneficiaries INT          NULL,
+  progress      TINYINT      NOT NULL DEFAULT 0,
+  goal_amount   DECIMAL(12,2) NULL,
+  raised_amount DECIMAL(12,2) NULL,
+  image         VARCHAR(255) NULL,
+  is_featured   TINYINT(1)   NOT NULL DEFAULT 0,
+  sort_order    INT          NOT NULL DEFAULT 0,
+  status        VARCHAR(20)  NOT NULL DEFAULT 'Active',
+  created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_projects_order (status, is_featured, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE projects
   ADD COLUMN IF NOT EXISTS slug        VARCHAR(255) NULL AFTER name,

@@ -2648,6 +2648,16 @@ label {
   border-radius: 0 70px 70px 70px;
 }
 
+.focus-area-card-link {
+  display: block;
+  color: inherit;
+}
+
+.focus-area-card-link:hover,
+.focus-area-card-link:focus {
+  color: inherit;
+}
+
 .visa-item .count{
   position: absolute;
   top: 90px;
@@ -6165,5 +6175,4 @@ label {
 }
 
 /* ================= end ================== */
-
 
