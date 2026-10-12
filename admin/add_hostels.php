@@ -37,8 +37,8 @@ $hostels = mysqli_query($conn, "SELECT * FROM hostels ORDER BY id DESC");
               <div class="profile_info">
                 <img src="img/client_img.png" alt="#">
                 <div class="profile_info_iner">
-                  <p>Welcome Admin!</p>
-                  <h5>Pradeep</h5>
+                  <p>Welcome to Jan Kalyan Sangh Foundation</p>
+                  <h5>Admin</h5>
                   <div class="profile_info_details">
                     <a href="#">My Profile</a>
                     <a href="#">Settings</a>
@@ -160,7 +160,7 @@ $hostels = mysqli_query($conn, "SELECT * FROM hostels ORDER BY id DESC");
         <div class="row align-items-center">
           <div class="col-lg-12">
             <div class="footer_text text-center">
-              <p>© 2025 Management Admin. All rights reserved.</p>
+              <p>© 2025 Jan Kalyan Sangh Foundation. All rights reserved.</p>
             </div>
           </div>
         </div>

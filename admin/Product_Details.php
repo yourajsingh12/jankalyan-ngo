@@ -6,7 +6,7 @@
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Management Admin</title>
+<title>Jan Kalyan Sangh Foundation | Admin Panel</title>
 <link rel="icon" href="img/mini_logo.png" type="image/png">
 
 <link rel="stylesheet" href="css/bootstrap1.min.css" />
@@ -60,7 +60,7 @@
 <img src="img/menu-icon/dashboard.svg" alt="">
 </div>
 <div class="nav_title">
-<span>User Management </span>
+<span>Foundation Dashboard</span>
 </div>
 </a>
 <ul>
@@ -109,12 +109,12 @@
 <img src="img/menu-icon/4.svg" alt="">
 </div>
 <div class="nav_title">
-<span>Admins</span>
+<span>Admin Access</span>
 </div>
 </a>
 <ul>
-<li><a href="admin_list.php">Admin List</a></li>
-<li><a href="add_new_admin.php">Add New Admin</a></li>
+<li><a href="add_new_user.php">Add Admin</a></li>
+<li><a href="participants.php">Participants</a></li>
 </ul>
 </li>
 <li class="">

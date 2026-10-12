@@ -6,7 +6,7 @@
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Management Admin</title>
+<title>Jan Kalyan Sangh Foundation | Admin Panel</title>
 
 
 <link rel="stylesheet" href="css/bootstrap1.min.css" />

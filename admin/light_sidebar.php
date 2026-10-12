@@ -6,7 +6,7 @@
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Management Admin</title>
+<title>Jan Kalyan Sangh Foundation | Admin Panel</title>
 <link rel="icon" href="img/mini_logo.png" type="image/png">
 
 <link rel="stylesheet" href="css/bootstrap1.min.css" />
@@ -60,13 +60,13 @@
 <img src="img/menu-icon/dashboard.svg" alt="">
 </div>
 <div class="nav_title">
-<span>User Management </span>
+<span>Foundation Dashboard</span>
 </div>
 </a>
 <ul>
-<li><a href="index_2.php">Default</a></li>
-<li><a href="index_3.php">Dark Sidebar</a></li>
-<li><a href="index-2.php">Light Sidebar</a></li>
+<li><a href="index.php">Dashboard Home</a></li>
+<li><a href="index.php#dashboard-stats">Stats</a></li>
+<li><a href="index.php#contact-messages">Messages</a></li>
 </ul>
 </li>
 <li class="">
@@ -75,14 +75,14 @@
 <img src="img/menu-icon/2.svg" alt="">
 </div>
 <div class="nav_title">
-<span>Application </span>
+<span>Content</span>
 </div>
 </a>
 <ul>
-<li><a href="editor.php">editor</a></li>
-<li><a href="mail_box.php">Mail Box</a></li>
-<li><a href="chat.php">Chat</a></li>
-<li><a href="faq.php">FAQ</a></li>
+<li><a href="editor.php">Home Content</a></li>
+<li><a href="about_content.php">About Content</a></li>
+<li><a href="header_content.php">Header Content</a></li>
+<li><a href="footer_content.php">Footer Content</a></li>
 </ul>
 </li>
 <li class="">
@@ -95,11 +95,10 @@
 </div>
 </a>
 <ul>
-<li><a href="login.php">Login</a></li>
-<li><a href="resister.php">Register</a></li>
-<li><a href="error_400.php">Error 404</a></li>
-<li><a href="error_500.php">Error 500</a></li>
-<li><a href="forgot_pass.php">Forgot Password</a></li>
+<li><a href="mission.php">Mission</a></li>
+<li><a href="projects.php">Projects</a></li>
+<li><a href="achievements.php">Achievements</a></li>
+<li><a href="team.php">Team</a></li>
 <li><a href="gallery.php">Gallery</a></li>
 </ul>
 </li>
@@ -109,12 +108,12 @@
 <img src="img/menu-icon/4.svg" alt="">
 </div>
 <div class="nav_title">
-<span>Admins</span>
+<span>Admin Access</span>
 </div>
 </a>
 <ul>
-<li><a href="admin_list.php">Admin List</a></li>
-<li><a href="add_new_admin.php">Add New Admin</a></li>
+<li><a href="add_new_user.php">Add Admin</a></li>
+<li><a href="participants.php">Participants</a></li>
 </ul>
 </li>
 <li class="">

@@ -153,7 +153,7 @@ if (isset($_POST['submit'])) {
       <div class="row align-items-center">
         <div class="col-lg-12">
           <div class="footer_text text-center">
-            <p>© 2025 Management Admin. All rights reserved.</p>
+            <p>© 2025 Jan Kalyan Sangh Foundation. All rights reserved.</p>
           </div>
         </div>
       </div>
