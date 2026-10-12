@@ -73,16 +73,13 @@ Table of contents
 1. Google fonts
 ======================*/
 
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap');
-
-
 /*====================
 2. Theme variables
 ======================*/
 
 :root {
-  --body-font: 'Roboto', sans-serif;
-  --heading-font: 'Ubuntu', sans-serif;
+  --body-font: 'Lora', serif;
+  --heading-font: 'Playfair Display', serif;
   --theme-color: #0c2d8a;
   --theme-color2: #f5a623;
   --theme-bg-light: #F7F9FF;
@@ -182,13 +179,14 @@ h5,
 h6 {
   color:  var(--color-dark);
   margin: 0px;
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--heading-font);
   line-height: 1.2;
 }
 
 h1 {
   font-size: 40px;
+  font-weight: 400;
 }
 
 h2 {
@@ -1285,8 +1283,9 @@ label {
   .navbar .nav-item .nav-link {
     margin-right: 40px;
     padding: 30px 0 30px 0;
-    font-size: 17px;
-    font-weight: 600;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 500;
     color: var(--color-dark);
     text-transform: capitalize;
     position: relative;
@@ -1348,7 +1347,8 @@ label {
   }
 
   .navbar .nav-item .dropdown-menu .dropdown-item {
-    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
     padding: 6px 15px;
     font-weight: 500;
     color: var(--color-dark);
@@ -1580,7 +1580,9 @@ label {
 
   .navbar .nav-item .nav-link {
     color:  var(--color-dark);
-    font-weight: 700;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
     margin-right: 0px;
     transition: var(--transition);
   }
@@ -1591,6 +1593,12 @@ label {
 
   .navbar .nav-item .dropdown-menu {
     border-radius: 15px;
+  }
+
+  .navbar .nav-item .dropdown-menu .dropdown-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 500;
   }
 
   .navbar .nav-item .dropdown-toggle::after {

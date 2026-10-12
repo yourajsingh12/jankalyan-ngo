@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } elseif (isset($_SESSION['participant_id'])) {
     $participant = row(
-        'SELECT id, full_name, mobile, email, designation, profile_photo, status
+        'SELECT id, full_name, mobile, email, designation, address, state, district, pincode, profile_photo, status
            FROM participants
           WHERE id = ?',
         [(int) $_SESSION['participant_id']]
@@ -127,7 +127,10 @@ include_once __DIR__ . '/head.php';
             body * { visibility: hidden !important; }
             .participant-login-card-wrap, .participant-login-card-wrap * { visibility: visible !important; }
             .participant-login-card-wrap { position: fixed; inset: 0; display: block; width: 85.6mm; height: 54mm; margin: 0; padding: 0; }
-            .participant-login-card { width: 85.6mm; height: 54mm; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+            .participant-login-card {
+                width: 85.6mm; height: 54mm; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none;
+                print-color-adjust: exact; -webkit-print-color-adjust: exact;
+            }
             .participant-login-card__header { gap: 2.5mm; padding: 2.5mm 3.5mm; }
             .participant-login-card__logo { width: 11mm; height: 11mm; }
             .participant-login-card__org { font-size: 8pt; }
@@ -164,7 +167,7 @@ include_once __DIR__ . '/head.php';
         <div class="container">
             <?php if ($participant !== null): ?>
                 <div class="participant-login-card-wrap">
-                    <div class="participant-login-card" aria-label="Your Jan Kalyan participant ID card">
+                    <div class="participant-login-card" aria-label="Your Jan Kalyan participant ID card front side">
                         <div class="participant-login-card__header">
                             <img class="participant-login-card__logo" src="<?= e(base_url('admin/img/logo_white.png')) ?>" alt="Jan Kalyan logo">
                             <div class="participant-login-card__org">
@@ -191,6 +194,35 @@ include_once __DIR__ . '/head.php';
                             <span class="participant-login-card__number">ID: JKSF-<?= e(str_pad((string) $participant['id'], 6, '0', STR_PAD_LEFT)) ?></span>
                         </div>
                     </div>
+
+                    <div class="participant-login-card" aria-label="Your Jan Kalyan participant ID card back side">
+                        <div class="participant-login-card__header">
+                            <img class="participant-login-card__logo" src="<?= e(base_url('admin/img/logo_white.png')) ?>" alt="Jan Kalyan logo">
+                            <div class="participant-login-card__org">
+                                JAN KALYAN SANGH FOUNDATION
+                                <small>PUBLIC WELFARE • COMMUNITY SERVICE</small>
+                            </div>
+                            <span class="participant-login-card__tag">IDENTITY CARD</span>
+                        </div>
+                        <div class="participant-login-card__body">
+                            <?php if (!empty($participant['profile_photo'])): ?>
+                                <img class="participant-login-card__photo" src="<?= e(img_url((string) $participant['profile_photo'])) ?>" alt="<?= e($participant['full_name']) ?>">
+                            <?php else: ?>
+                                <div class="participant-login-card__initial" aria-hidden="true"><?= e(mb_strtoupper(mb_substr((string) $participant['full_name'], 0, 1))) ?></div>
+                            <?php endif; ?>
+                            <div class="participant-login-card__details">
+                                <h1 class="participant-login-card__name"><?= e($participant['full_name']) ?></h1>
+                                <div class="participant-login-card__designation"><?= e($participant['designation']) ?></div>
+                                <div class="participant-login-card__detail"><strong>Mobile</strong><span><?= e($participant['mobile']) ?></span></div>
+                                <div class="participant-login-card__detail"><strong>Email</strong><span><?= e($participant['email']) ?></span></div>
+                            </div>
+                        </div>
+                        <div class="participant-login-card__footer">
+                            <span>APPROVED PARTICIPANT</span>
+                            <span class="participant-login-card__number">ID: JKSF-<?= e(str_pad((string) $participant['id'], 6, '0', STR_PAD_LEFT)) ?></span>
+                        </div>
+                    </div>
+
                     <div class="participant-login-card-actions d-flex flex-wrap justify-content-center gap-2">
                         <button class="theme-btn" type="button" onclick="window.print()"><i class="fas fa-print"></i> Print ID card</button>
                         <form method="post">

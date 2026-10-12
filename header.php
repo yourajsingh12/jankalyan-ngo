@@ -54,7 +54,8 @@ $contactAddress = setting('contact_address_plain');
         <nav class="navbar navbar-expand-lg">
             <div class="container position-relative">
                 <a class="navbar-brand" href="index.php">
-                    <img src="assets/img/logo/study.png" alt="StudyLoan Experts logo">
+                    <img class="site-brand__logo" src="assets/img/logo/study.png" alt="Jan Kalyan Sangh Foundation logo">
+                    <span class="site-brand__name">Jan Kalyan Sangh Foundation</span>
                 </a>
                 <div class="mobile-menu-right">
                     <div class="mobile-menu-btn">
@@ -73,7 +74,8 @@ $contactAddress = setting('contact_address_plain');
                     aria-labelledby="offcanvasNavbarLabel">
                     <div class="offcanvas-header">
                         <a href="index.php" class="offcanvas-brand" id="offcanvasNavbarLabel">
-                            <img src="assets/img/logo/study.png" alt="StudyLoan Experts logo">
+                            <img class="site-brand__logo" src="assets/img/logo/study.png" alt="Jan Kalyan Sangh Foundation logo">
+                            <span class="site-brand__name">Jan Kalyan Sangh Foundation</span>
                         </a>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"><i
                                 class="far fa-xmark"></i></button>
@@ -81,18 +83,20 @@ $contactAddress = setting('contact_address_plain');
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1">
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">About</a>
-                                <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
-                                    <li><a class="dropdown-item" href="about.php">About Us</a></li>
-                                    <li><a class="dropdown-item" href="achievements.php">Achievements</a></li>
-                                    <li><a class="dropdown-item" href="projects.php">Projects</a></li>
-                                    <li><a class="dropdown-item" href="certificate.php">Certificate</a></li>
+                            <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
+                            <li class="nav-item dropdown our-work-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="ourWorkDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-sparkles"></i> Our Work</a>
+                                <ul class="dropdown-menu" aria-labelledby="ourWorkDropdown">
+                                    <li class="our-work-dropdown__heading">Explore our impact</li>
+                                    <li><a class="dropdown-item" href="certificate.php"><i class="fas fa-certificate"></i> Certificates</a></li>
+                                    <li><a class="dropdown-item" href="projects.php"><i class="fas fa-diagram-project"></i> Projects</a></li>
+                                    <li><a class="dropdown-item" href="achievements.php"><i class="fas fa-trophy"></i> Achievements</a></li>
+                                    <li><a class="dropdown-item" href="team.php"><i class="fas fa-people-group"></i> Team</a></li>
+                                    <li><a class="dropdown-item" href="mission.php"><i class="fas fa-bullseye"></i> Mission</a></li>
+                                    <li><a class="dropdown-item" href="gallery.php"><i class="fas fa-images"></i> Gallery</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="team.php">Team</a></li>
-                            <li class="nav-item"><a class="nav-link" href="mission.php">Mission</a></li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="participate.php" id="participateDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Participate</a>
@@ -101,7 +105,6 @@ $contactAddress = setting('contact_address_plain');
                                     <li><a class="dropdown-item" href="participant_login.php"><i class="fas fa-id-card"></i> Participant Login</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="gallery.php">Gallery</a></li>
                             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
                         
                         </ul>
@@ -184,3 +187,146 @@ $contactAddress = setting('contact_address_plain');
     </div>
 </div>
 <!-- sidebar-popup end -->
+
+<style>
+    .navbar .navbar-brand,
+    .navbar .offcanvas-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        white-space: normal;
+    }
+
+    .navbar .navbar-brand {
+        flex: 0 1 auto;
+        min-width: 0;
+    }
+
+    .navbar .navbar-brand img.site-brand__logo,
+    .navbar .offcanvas-brand img.site-brand__logo {
+        width: 92px;
+        height: 92px;
+        flex: 0 0 auto;
+        object-fit: contain;
+        transform: scale(1.18);
+    }
+
+    .site-brand__name {
+        max-width: none;
+        color: #0c2d8a;
+        font-family: 'Playfair Display', serif;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: .025em;
+        overflow-wrap: normal;
+        white-space: nowrap;
+    }
+
+    .navbar .offcanvas-brand .site-brand__name {
+        color: #0c2d8a;
+    }
+
+    .our-work-dropdown .nav-link i {
+        margin-right: 5px;
+        color: var(--theme-color);
+        font-size: 14px;
+    }
+
+    .navbar .our-work-dropdown .dropdown-menu {
+        width: 255px;
+        padding: 12px;
+        border: 1px solid rgba(24, 59, 42, .08);
+        box-shadow: 0 18px 42px rgba(24, 59, 42, .16);
+    }
+
+    .our-work-dropdown__heading {
+        margin: 0 6px 7px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: linear-gradient(120deg, #183b2a, #2f7650);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .navbar .our-work-dropdown .dropdown-menu .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+    }
+
+    .our-work-dropdown .dropdown-item i {
+        width: 18px;
+        color: var(--theme-color);
+        text-align: center;
+    }
+
+    @media (min-width: 992px) {
+        .navbar .nav-item .nav-link {
+            margin-right: 18px;
+        }
+    }
+
+    @media (min-width: 992px) and (max-width: 1199px) {
+        .navbar .nav-item .nav-link {
+            margin-right: 12px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .navbar .navbar-brand {
+            flex: 1 1 auto;
+            max-width: calc(100% - 48px);
+        }
+
+        .navbar .navbar-brand img.site-brand__logo {
+            width: 62px;
+            height: 62px;
+            transform: scale(1.15);
+        }
+
+        .navbar .navbar-brand,
+        .navbar .offcanvas-brand {
+            gap: 10px;
+        }
+
+        .site-brand__name {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 190px;
+            font-size: 12px;
+            line-height: 1.25;
+            white-space: normal;
+        }
+
+        .navbar .offcanvas-brand {
+            width: auto;
+            max-width: calc(100% - 40px);
+        }
+
+        .navbar .offcanvas-brand img.site-brand__logo {
+            width: 62px;
+            height: 62px;
+            margin-right: 12px;
+            transform: scale(1.15);
+        }
+
+        .navbar .mobile-menu-btn {
+            display: none;
+        }
+
+        .navbar .mobile-menu-right {
+            gap: 0;
+        }
+
+        .navbar .our-work-dropdown .dropdown-menu {
+            width: auto;
+            padding: 8px;
+            box-shadow: none;
+        }
+    }
+</style>

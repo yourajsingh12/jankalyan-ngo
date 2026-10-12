@@ -31,6 +31,9 @@ $metaKeys = $pageKeywords ?? setting('meta_keywords');
     <link rel="icon" type="image/x-icon" href="<?= e(img_url(setting('favicon'), 'assets/img/logo/study.png')) ?>">
 
     <!-- css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Lora:wght@400&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/all-fontawesome.min.css">
     <link rel="stylesheet" href="assets/css/animate.min.css">
