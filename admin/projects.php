@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location = trim((string) ($_POST['location'] ?? ''));
     $category = trim((string) ($_POST['category'] ?? ''));
     $description = trim((string) ($_POST['description'] ?? ''));
+    $fullDetails = trim((string) ($_POST['full_details'] ?? ''));
     $beneficiariesInput = trim((string) ($_POST['beneficiaries'] ?? ''));
     $progress = filter_var($_POST['progress'] ?? '0', FILTER_VALIDATE_INT);
     $sortOrder = filter_var($_POST['sort_order'] ?? '0', FILTER_VALIDATE_INT);
@@ -102,6 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $newImage = upload_image($_FILES['image'] ?? null, 'projects');
+        if ($newImage !== null) {
+            validate_uploaded_image_dimensions($newImage, 600, 450, 'Project images');
+        }
     } catch (RuntimeException $exception) {
         flash($exception->getMessage(), 'error');
         project_admin_redirect();
@@ -112,13 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($existing === null) {
             q(
-                'INSERT INTO projects (name, location, category, description, beneficiaries, progress, goal_amount, raised_amount, image, is_featured, sort_order, status)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO projects (name, location, category, description, full_details, beneficiaries, progress, goal_amount, raised_amount, image, is_featured, sort_order, status)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
                     $name,
                     $location !== '' ? $location : null,
                     $category !== '' ? $category : null,
                     $description !== '' ? $description : null,
+                    $fullDetails !== '' ? $fullDetails : null,
                     $beneficiaries,
                     $progress,
                     $goalAmount,
@@ -133,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             q(
                 'UPDATE projects
-                    SET name = ?, location = ?, category = ?, description = ?, beneficiaries = ?, progress = ?,
+                    SET name = ?, location = ?, category = ?, description = ?, full_details = ?, beneficiaries = ?, progress = ?,
                         goal_amount = ?, raised_amount = ?, image = ?, is_featured = ?, sort_order = ?, status = ?
                   WHERE id = ?',
                 [
@@ -141,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $location !== '' ? $location : null,
                     $category !== '' ? $category : null,
                     $description !== '' ? $description : null,
+                    $fullDetails !== '' ? $fullDetails : null,
                     $beneficiaries,
                     $progress,
                     $goalAmount,
@@ -233,8 +239,12 @@ $messages = take_flash();
                                 <input id="project-location" class="form-control" name="location" maxlength="255" value="<?= e($selected['location'] ?? '') ?>">
                             </div>
                             <div class="col-12">
-                                <label for="project-description" class="form-label">Description</label>
+                                <label for="project-description" class="form-label">Short Description</label>
                                 <textarea id="project-description" class="form-control" name="description" rows="4"><?= e($selected['description'] ?? '') ?></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label for="project-full-details" class="form-label">Full Details</label>
+                                <textarea id="project-full-details" class="form-control" name="full_details" rows="6"><?= e($selected['full_details'] ?? '') ?></textarea>
                             </div>
                             <div class="col-md-3">
                                 <label for="project-beneficiaries" class="form-label">Beneficiaries</label>
@@ -272,6 +282,7 @@ $messages = take_flash();
                             <div class="col-md-6">
                                 <label for="project-image" class="form-label">Project image <?= $selected === null ? '' : '(optional replacement)' ?></label>
                                 <input id="project-image" class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif">
+                                <small class="text-muted">Required size: 600 × 450 px.</small>
                             </div>
                             <?php if ($selected !== null && !empty($selected['image'])): ?>
                                 <div class="col-md-6">

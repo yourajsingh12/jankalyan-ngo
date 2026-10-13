@@ -134,7 +134,7 @@ if ($uploadError !== UPLOAD_ERR_NO_FILE) {
         'image/png' => 'png',
         'image/webp' => 'webp',
     ];
-    if (!isset($extensions[$mime])) {
+    if (!isset($extensions[$mime]) || $imageInfo[0] !== 1672 || $imageInfo[1] !== 941) {
         bannerRedirect(bannerEditUrl($id, 'invalid_image'));
     }
 

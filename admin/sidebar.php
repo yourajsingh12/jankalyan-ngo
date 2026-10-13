@@ -142,6 +142,17 @@
             </li>
 
             <li class="">
+                <a href="campaigns.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Campaigns</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="">
                 <a href="team.php" aria-expanded="false">
                     <div class="nav_icon_small">
                         <i class="fas fa-user-friends"></i>
@@ -159,6 +170,17 @@
                     </div>
                     <div class="nav_title">
                         <span>Certificates</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="transparency.php" aria-expanded="false">
+                    <div class="nav_icon_small">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="nav_title">
+                        <span>Transparency</span>
                     </div>
                 </a>
             </li>

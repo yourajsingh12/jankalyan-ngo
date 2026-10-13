@@ -118,16 +118,89 @@ $metaKeys = $pageKeywords ?? setting('meta_keywords');
         .project-progress { height: 6px; margin-top: 20px; overflow: hidden; border-radius: 10px; background: #e7eee9; }
         .project-progress span { display: block; height: 100%; border-radius: inherit; background: var(--theme-color); }
         .project-meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 9px; color: #667085; font-size: 13px; }
+        .project-detail-card { background: #fff; border: 1px solid #e3ebe5; border-radius: 18px; padding: 32px; box-shadow: 0 14px 34px rgba(25, 50, 35, .08); }
+        .project-detail-image { width: 100%; height: 100%; min-height: 330px; object-fit: cover; border-radius: 16px; }
+        .project-detail-summary { color: #4b5563; line-height: 1.8; font-size: 1.02rem; }
+        .project-detail-actions { margin-top: 24px; }
+        .project-detail-metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin: 28px 0; }
+        .project-detail-metric { padding: 18px; border: 1px solid #e5ece7; border-radius: 12px; background: #f8fbf9; }
+        .project-detail-metric strong { display: block; margin-bottom: 8px; color: #183b2a; font-size: 13px; }
+        .project-detail-metric span { color: #667085; font-size: 14px; }
+        .project-detail-copy { margin-top: 10px; }
+        .project-detail-copy h4 { margin-bottom: 16px; }
+        .project-detail-copy p { color: #4b5563; line-height: 1.9; }
         .project-impact { padding: 65px 0; background: #eaf4ed; }
         .project-impact h2 { margin-bottom: 14px; }
         .project-impact p { color: #667085; line-height: 1.8; }
         .impact-point { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
         .impact-point i { flex: 0 0 auto; margin-top: 4px; color: var(--theme-color); }
         .impact-point p { margin: 0; }
+        @media (max-width: 991.98px) {
+            .project-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
         @media (max-width: 575.98px) {
             .project-feature { min-height: 390px; padding: 30px 22px; }
             .project-card-body { padding: 22px; }
             .project-card-image { height: 190px; }
+            .project-detail-card { padding: 22px; }
+            .project-detail-metrics { grid-template-columns: 1fr; }
+        }
+    </style>
+    <?php endif; ?>
+
+    <?php if (basename($_SERVER['SCRIPT_NAME']) === 'campaigns.php'): ?>
+    <style>
+        .campaigns-page { background: #f3f7fd; }
+        .campaigns-intro { max-width: 760px; margin: 0 auto 38px; text-align: center; }
+        .campaigns-intro p { color: #64748b; line-height: 1.8; }
+        .campaign-card { height: 100%; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e3eaf2; border-radius: 20px; background: #fff; box-shadow: 0 12px 32px rgba(20, 48, 82, .08); }
+        .campaign-card-media { display: block; height: 250px; position: relative; overflow: hidden; background: #dbe5f0; }
+        .campaign-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+        .campaign-card:hover .campaign-card-media img { transform: scale(1.045); }
+        .campaign-card-media::after { content: ''; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, rgba(9, 24, 40, .78)); pointer-events: none; }
+        .campaign-category, .campaign-status { position: absolute; z-index: 1; top: 16px; border-radius: 999px; padding: 8px 14px; color: #fff; font-size: .76rem; font-weight: 700; }
+        .campaign-category { left: 16px; background: #f59e0b; }
+        .campaign-status { right: 16px; background: #059669; }
+        .campaign-status.is-completed { background: #2784bd; }
+        .campaign-status.is-upcoming { background: #7c3aed; }
+        .campaign-card-content { flex: 1; padding: 22px 24px 18px; }
+        .campaign-card-content h3 { margin: 0 0 9px; color: #183b5b; font-size: 1.2rem; }
+        .campaign-card-content > p { min-height: 48px; margin-bottom: 14px; color: #718096; line-height: 1.55; }
+        .campaign-read-more { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 18px; color: #087e78; font-size: .9rem; font-weight: 700; }
+        .campaign-read-more:hover { color: #075e59; }
+        .campaign-dates { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-bottom: 18px; color: #64748b; font-size: .84rem; }
+        .campaign-dates i { margin-right: 5px; color: #0f766e; }
+        .campaign-amounts { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; color: #173958; font-size: .9rem; font-weight: 700; }
+        .campaign-raised { color: #087e78; }
+        .campaign-progress { height: 9px; margin-bottom: 8px; overflow: hidden; border-radius: 99px; background: #e2e8f0; }
+        .campaign-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #159b71, #0f766e); }
+        .campaign-remaining { margin-bottom: 15px; color: #ef5146; font-size: .85rem; font-weight: 700; }
+        .campaign-remaining.is-complete { color: #159b71; }
+        .campaign-supporters { padding: 12px 15px; border-radius: 13px; background: #f1f5f9; color: #64748b; font-size: .88rem; }
+        .campaign-card-actions { display: flex; align-items: center; gap: 10px; padding: 15px 20px; border-top: 1px solid #edf1f5; background: #fbfcfe; }
+        .campaign-card-actions .campaign-details-button { flex: 0 0 auto; padding: 11px 15px; border: 1px solid #dbe5ef; border-radius: 999px; color: #173958; font-size: .88rem; font-weight: 700; white-space: nowrap; }
+        .campaign-card-actions .campaign-donate-button { flex: 1; min-width: 0; padding: 12px 16px; border: 0; border-radius: 999px; background: linear-gradient(100deg, #183b5b, #0f766e); color: #fff; text-align: center; font-size: .9rem; font-weight: 700; white-space: nowrap; }
+        .campaign-card-actions a:hover { filter: brightness(.96); }
+        .campaign-detail-card { overflow: hidden; border: 1px solid #e3eaf2; border-radius: 22px; background: #fff; box-shadow: 0 14px 36px rgba(20, 48, 82, .08); }
+        .campaign-detail-image { width: 100%; max-height: 520px; object-fit: cover; }
+        .campaign-detail-content { padding: 28px; }
+        .campaign-detail-content .campaign-category, .campaign-detail-content .campaign-status { position: static; }
+        .campaign-detail-content h1 { color: #183b5b; }
+        .campaign-detail-copy { color: #475569; line-height: 1.85; }
+        .campaign-detail-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 22px; }
+        .campaign-detail-stat { padding: 16px; border-radius: 13px; background: #f1f5f9; }
+        .campaign-detail-stat strong, .campaign-detail-stat span { display: block; }
+        .campaign-detail-stat strong { margin-bottom: 5px; color: #183b5b; font-size: .85rem; }
+        .campaign-detail-stat span { color: #64748b; }
+        @media (max-width: 767.98px) {
+            .campaign-card-media { height: 225px; }
+            .campaign-detail-content { padding: 22px; }
+            .campaign-detail-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 420px) {
+            .campaign-card-actions { flex-wrap: wrap; }
+            .campaign-card-actions .campaign-donate-button { flex-basis: 100%; }
+            .campaign-amounts { font-size: .82rem; }
         }
     </style>
     <?php endif; ?>

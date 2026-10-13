@@ -24,7 +24,7 @@ $messages = [
 ];
 $errors = [
     'invalid_request' => 'The request could not be verified. Please try again.',
-    'invalid_image' => 'Choose a valid JPG, PNG, or WEBP image up to 5 MB.',
+    'invalid_image' => 'Choose a valid JPG, PNG, or WEBP image exactly 1672 × 941 pixels and up to 5 MB.',
     'upload_failed' => 'The image could not be uploaded. Please try again.',
     'save_failed' => 'The banner could not be saved. Please try again.',
     'not_found' => 'That home page banner no longer exists.',

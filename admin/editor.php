@@ -181,8 +181,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             editor_redirect();
         }
 
+        $newImage = null;
         try {
             $newImage = upload_image($_FILES['image_upload'] ?? null, 'focus-areas');
+            if ($newImage !== null) {
+                validate_uploaded_image_dimensions($newImage, 1448, 1086, 'Focus Area images');
+            }
         } catch (RuntimeException $exception) {
             flash($exception->getMessage(), 'error');
             editor_redirect();
@@ -316,6 +320,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newImage = null;
         try {
             $newImage = upload_image($_FILES['cta_image_upload'] ?? null, 'homepage');
+            if ($newImage !== null) {
+                validate_uploaded_image_dimensions($newImage, 1774, 887, 'Homepage CTA images');
+            }
         } catch (RuntimeException $exception) {
             flash($exception->getMessage(), 'error');
             editor_redirect();
@@ -472,6 +479,7 @@ $messages = take_flash();
                         <div class="col-md-4">
                             <label class="form-label">Or upload image (JPG, PNG, WEBP, GIF)</label>
                             <input class="form-control" type="file" name="image_upload" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" data-image-preview-for="new-focus-image-preview">
+                            <small class="text-muted d-block mt-1">Required size: 1448 × 1086 px.</small>
                             <img id="new-focus-image-preview" src="<?= e(img_url('', 'assets/img/visa/seva1.png')) ?>" data-original-src="<?= e(img_url('', 'assets/img/visa/seva1.png')) ?>" alt="New Focus Area image preview" style="display:block; width:180px; height:120px; margin-top:10px; border-radius:10px; object-fit:cover;">
                         </div>
                         <div class="col-md-2">
@@ -504,7 +512,10 @@ $messages = take_flash();
                                             <input class="form-control mb-2" form="<?= e($formId) ?>" name="image_path" maxlength="255" value="<?= e($focusArea['image']) ?>" data-image-path-for="focus-card-preview-<?= (int) $focusArea['id'] ?>" data-site-root="<?= e(base_url()) ?>">
                                             <img id="focus-card-preview-<?= (int) $focusArea['id'] ?>" src="<?= e($focusCardImage) ?>" data-original-src="<?= e($focusCardImage) ?>" alt="<?= e($focusArea['title']) ?> preview" style="max-width:140px;max-height:80px;object-fit:cover;border-radius:8px;">
                                         </td>
-                                        <td><input class="form-control" form="<?= e($formId) ?>" type="file" name="image_upload" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" data-image-preview-for="focus-card-preview-<?= (int) $focusArea['id'] ?>"></td>
+                                        <td>
+                                            <input class="form-control" form="<?= e($formId) ?>" type="file" name="image_upload" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" data-image-preview-for="focus-card-preview-<?= (int) $focusArea['id'] ?>">
+                                            <small class="text-muted d-block mt-1">Required: 1448 × 1086 px</small>
+                                        </td>
                                         <td><input class="form-control" form="<?= e($formId) ?>" type="number" name="sort_order" min="0" value="<?= e($focusArea['sort_order']) ?>" required></td>
                                         <td><select class="form-select" form="<?= e($formId) ?>" name="status"><option value="1" <?= (int) $focusArea['status'] === 1 ? 'selected' : '' ?>>Show</option><option value="0" <?= (int) $focusArea['status'] === 0 ? 'selected' : '' ?>>Hide</option></select></td>
                                         <td class="d-flex gap-2">
@@ -545,6 +556,7 @@ $messages = take_flash();
                             <div class="col-md-6">
                                 <label class="form-label" for="cta-image-upload">Or upload a replacement image</label>
                                 <input class="form-control" id="cta-image-upload" type="file" name="cta_image_upload" accept="image/jpeg,image/png,image/gif,image/webp" data-image-preview-for="cta-image-preview">
+                                <small class="text-muted d-block mt-1">Required size: 1774 × 887 px.</small>
                                 <img id="cta-image-preview" src="<?= e(img_url((string) ($cta['image'] ?? ''), 'assets/img/cta/flood.png')) ?>" data-original-src="<?= e(img_url((string) ($cta['image'] ?? ''), 'assets/img/cta/flood.png')) ?>" alt="Homepage call to action image preview" style="display:block; width:180px; height:120px; margin-top:10px; border-radius:10px; object-fit:cover;">
                             </div>
                             <div class="col-12">

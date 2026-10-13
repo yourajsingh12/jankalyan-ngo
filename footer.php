@@ -55,6 +55,7 @@ $footerSocialLinks = rows(
                                     <li><a href="about.php"><i class="far fa-angle-double-right"></i>About Us</a></li>
                                     <li><a href="mission.php"><i class="far fa-angle-double-right"></i>Mission</a></li>
                                     <li><a href="projects.php"><i class="far fa-angle-double-right"></i>Projects</a></li>
+                                    <li><a href="campaigns.php"><i class="far fa-angle-double-right"></i>Campaigns</a></li>
                                     <li><a href="gallery.php"><i class="far fa-angle-double-right"></i>Gallery</a></li>
                                     <li><a href="contact.php"><i class="far fa-angle-double-right"></i>Contact</a></li>
                                 </ul>

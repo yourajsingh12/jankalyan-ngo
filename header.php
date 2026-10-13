@@ -91,7 +91,9 @@ $contactAddress = setting('contact_address_plain');
                                     <li class="our-work-dropdown__heading">Explore our impact</li>
                                     <li><a class="dropdown-item" href="certificate.php"><i class="fas fa-certificate"></i> Certificates</a></li>
                                     <li><a class="dropdown-item" href="projects.php"><i class="fas fa-diagram-project"></i> Projects</a></li>
+                                    <li><a class="dropdown-item" href="campaigns.php"><i class="fas fa-hand-holding-heart"></i> Campaigns</a></li>
                                     <li><a class="dropdown-item" href="achievements.php"><i class="fas fa-trophy"></i> Achievements</a></li>
+                                    <li><a class="dropdown-item" href="transparency.php"><i class="fas fa-file-pdf"></i> Transparency</a></li>
                                     <li><a class="dropdown-item" href="team.php"><i class="fas fa-people-group"></i> Team</a></li>
                                     <li><a class="dropdown-item" href="mission.php"><i class="fas fa-bullseye"></i> Mission</a></li>
                                     <li><a class="dropdown-item" href="gallery.php"><i class="fas fa-images"></i> Gallery</a></li>

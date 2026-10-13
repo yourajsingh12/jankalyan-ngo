@@ -81,6 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $newImage = upload_image($_FILES['image'] ?? null, 'gallery');
+        if ($newImage !== null) {
+            validate_uploaded_image_dimensions($newImage, 500, 600, 'Gallery images');
+        }
     } catch (RuntimeException $exception) {
         flash($exception->getMessage(), 'error');
         gallery_admin_redirect();
@@ -194,7 +197,7 @@ $messages = take_flash();
                             <div class="col-lg-6">
                                 <label for="gallery-image" class="form-label">Image <?= $selected === null ? '*' : '(choose to replace current image)' ?></label>
                                 <input id="gallery-image" class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" <?= $selected === null ? 'required' : '' ?>>
-                                <small class="text-muted">JPG, PNG, WEBP, or GIF; maximum 5 MB.</small>
+                                <small class="text-muted">JPG, PNG, WEBP, or GIF; maximum 5 MB; exactly 500 × 600 px.</small>
                             </div>
                             <div class="col-lg-6">
                                 <?php if ($selected !== null): ?>

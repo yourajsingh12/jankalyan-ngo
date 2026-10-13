@@ -497,6 +497,22 @@ function delete_upload(?string $path): void
     }
 }
 
+/**
+ * Ensures an uploaded image has the required pixel dimensions.
+ *
+ * @throws RuntimeException when the uploaded image dimensions do not match.
+ */
+function validate_uploaded_image_dimensions(string $uploadedImage, int $expectedWidth, int $expectedHeight, string $label): void
+{
+    $absolutePath = BASE_PATH . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $uploadedImage);
+    $dimensions = @getimagesize($absolutePath);
+
+    if ($dimensions === false || $dimensions[0] !== $expectedWidth || $dimensions[1] !== $expectedHeight) {
+        delete_upload($uploadedImage);
+        throw new RuntimeException($label . ' must be exactly ' . $expectedWidth . ' × ' . $expectedHeight . ' pixels.');
+    }
+}
+
 function upload_error_message(int $code): string
 {
     return match ($code) {

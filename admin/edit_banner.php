@@ -27,7 +27,7 @@ if ($id !== null && $id !== false) {
 }
 
 $errors = [
-    'invalid_image' => 'Choose a valid JPG, PNG, or WEBP image up to 5 MB.',
+    'invalid_image' => 'Choose a valid JPG, PNG, or WEBP image exactly 1672 × 941 pixels and up to 5 MB.',
     'upload_failed' => 'The image could not be uploaded. Please try again.',
     'save_failed' => 'The banner could not be saved. Please try again.',
     'invalid_details' => 'Please enter a title and valid banner details.',
@@ -109,7 +109,7 @@ $isEditing = $selected !== null;
                                                 accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                                 <?= $isEditing ? '' : 'required' ?>
                                                 style="border-radius:10px; border:1px solid #dbeafe;">
-                                            <div class="mt-2 text-muted small">Recommended: wide image (about 1920 × 700 px). JPG, PNG, or WEBP; maximum 5 MB.</div>
+                                            <div class="mt-2 text-muted small">Required size: 1672 × 941 px. JPG, PNG, or WEBP; maximum 5 MB.</div>
                                         </div>
 
                                         <div class="row">

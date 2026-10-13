@@ -184,10 +184,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         achievement_admin_redirect();
     }
 
+    $newImage = null;
+    $newIcon = null;
     try {
         $newImage = upload_image($_FILES['image'] ?? null, 'achievements');
+        if ($newImage !== null) {
+            validate_uploaded_image_dimensions($newImage, 500, 600, 'Achievement images');
+        }
         $newIcon = upload_image($_FILES['icon'] ?? null, 'achievements');
     } catch (RuntimeException $exception) {
+        if ($newImage !== null) {
+            delete_upload($newImage);
+        }
+        if ($newIcon !== null) {
+            delete_upload($newIcon);
+        }
         flash($exception->getMessage(), 'error');
         achievement_admin_redirect();
     }
@@ -378,6 +389,7 @@ $messages = take_flash();
                             <div class="col-md-6">
                                 <label for="achievement-image" class="form-label">Achievement image <?= $selected === null ? '' : '(optional replacement)' ?></label>
                                 <input id="achievement-image" class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif">
+                                <small class="text-muted">Required size: 500 × 600 px.</small>
                             </div>
                             <div class="col-md-6">
                                 <label for="achievement-icon" class="form-label">Achievement icon <?= $selected === null ? '' : '(optional replacement)' ?></label>

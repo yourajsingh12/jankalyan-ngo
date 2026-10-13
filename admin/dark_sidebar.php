@@ -97,6 +97,7 @@
 <ul>
 <li><a href="mission.php">Mission</a></li>
 <li><a href="projects.php">Projects</a></li>
+<li><a href="campaigns.php">Campaigns</a></li>
 <li><a href="achievements.php">Achievements</a></li>
 <li><a href="team.php">Team</a></li>
 <li><a href="gallery.php">Gallery</a></li>
