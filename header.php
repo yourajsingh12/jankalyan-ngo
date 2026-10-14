@@ -83,20 +83,25 @@ $contactAddress = setting('contact_address_plain');
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1">
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
-                            <li class="nav-item dropdown our-work-dropdown">
+                            <li class="nav-item dropdown nav-section-dropdown about-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">About Us</a>
+                                <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                                    <li><a class="dropdown-item" href="about.php"><i class="fas fa-circle-info"></i> About Us</a></li>
+                                    <li><a class="dropdown-item" href="mission.php"><i class="fas fa-bullseye"></i> Mission</a></li>
+                                    <li><a class="dropdown-item" href="team.php"><i class="fas fa-people-group"></i> Team</a></li>
+                                    <li><a class="dropdown-item" href="transparency.php"><i class="fas fa-file-pdf"></i> Transparency</a></li>
+                                    <li><a class="dropdown-item" href="certificate.php"><i class="fas fa-certificate"></i> Certificates</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown nav-section-dropdown our-work-dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="ourWorkDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-sparkles"></i> Our Work</a>
                                 <ul class="dropdown-menu" aria-labelledby="ourWorkDropdown">
-                                    <li class="our-work-dropdown__heading">Explore our impact</li>
-                                    <li><a class="dropdown-item" href="certificate.php"><i class="fas fa-certificate"></i> Certificates</a></li>
                                     <li><a class="dropdown-item" href="projects.php"><i class="fas fa-diagram-project"></i> Projects</a></li>
-                                    <li><a class="dropdown-item" href="campaigns.php"><i class="fas fa-hand-holding-heart"></i> Campaigns</a></li>
                                     <li><a class="dropdown-item" href="achievements.php"><i class="fas fa-trophy"></i> Achievements</a></li>
-                                    <li><a class="dropdown-item" href="transparency.php"><i class="fas fa-file-pdf"></i> Transparency</a></li>
-                                    <li><a class="dropdown-item" href="team.php"><i class="fas fa-people-group"></i> Team</a></li>
-                                    <li><a class="dropdown-item" href="mission.php"><i class="fas fa-bullseye"></i> Mission</a></li>
                                     <li><a class="dropdown-item" href="gallery.php"><i class="fas fa-images"></i> Gallery</a></li>
+                                    <li><a class="dropdown-item" href="campaigns.php"><i class="fas fa-hand-holding-heart"></i> Campaigns</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -229,39 +234,27 @@ $contactAddress = setting('contact_address_plain');
         color: #0c2d8a;
     }
 
-    .our-work-dropdown .nav-link i {
+    .nav-section-dropdown .nav-link i {
         margin-right: 5px;
         color: var(--theme-color);
         font-size: 14px;
     }
 
-    .navbar .our-work-dropdown .dropdown-menu {
+    .navbar .nav-section-dropdown .dropdown-menu {
         width: 255px;
         padding: 12px;
         border: 1px solid rgba(24, 59, 42, .08);
         box-shadow: 0 18px 42px rgba(24, 59, 42, .16);
     }
 
-    .our-work-dropdown__heading {
-        margin: 0 6px 7px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: linear-gradient(120deg, #183b2a, #2f7650);
-        color: #fff;
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-    }
-
-    .navbar .our-work-dropdown .dropdown-menu .dropdown-item {
+    .navbar .nav-section-dropdown .dropdown-menu .dropdown-item {
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 9px 12px;
     }
 
-    .our-work-dropdown .dropdown-item i {
+    .nav-section-dropdown .dropdown-item i {
         width: 18px;
         color: var(--theme-color);
         text-align: center;
@@ -325,7 +318,7 @@ $contactAddress = setting('contact_address_plain');
             gap: 0;
         }
 
-        .navbar .our-work-dropdown .dropdown-menu {
+        .navbar .nav-section-dropdown .dropdown-menu {
             width: auto;
             padding: 8px;
             box-shadow: none;

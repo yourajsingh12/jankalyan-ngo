@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } elseif (isset($_SESSION['participant_id'])) {
     $participant = row(
-        'SELECT id, full_name, mobile, email, designation, address, state, district, pincode, profile_photo, status
+        'SELECT id, full_name, mobile, email, dob, designation, address, state, district, pincode, profile_photo, status
            FROM participants
           WHERE id = ?',
         [(int) $_SESSION['participant_id']]
@@ -87,79 +87,46 @@ include_once __DIR__ . '/head.php';
         .participant-login-panel input:focus { border-color: #274bd8; outline: 3px solid rgba(39,75,216,.12); }
         .participant-login-card-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
         .participant-login-card {
-            width: min(440px, 100%); aspect-ratio: 1.585 / 1; display: flex; flex-direction: column; overflow: hidden;
-            color: #172554; background: #fff; border: 1px solid #c7d2fe; border-radius: 18px;
-            box-shadow: 0 22px 55px rgba(30,58,138,.2); font-family: Arial, sans-serif;
+            position: relative; container-type: inline-size; width: min(340px, 100%); aspect-ratio: 591 / 1004;
+            overflow: hidden; box-shadow: 0 22px 55px rgba(30,58,138,.2); font-family: Arial, sans-serif;
         }
-        .participant-login-card__header {
-            display: flex; align-items: center; gap: 12px; min-height: 29%; padding: 12px 18px; color: #fff;
-            background: linear-gradient(115deg, #101b73, #1836b8 66%, #274bd8); border-bottom: 3px solid #e32636;
-        }
-        .participant-login-card__logo { width: 54px; height: 54px; flex: 0 0 auto; object-fit: contain; }
-        .participant-login-card__org { min-width: 0; font-size: 13px; font-weight: 800; line-height: 1.2; letter-spacing: .045em; }
-        .participant-login-card__org small { display: block; margin-top: 4px; color: #dbeafe; font-size: 8px; font-weight: 600; letter-spacing: .14em; }
-        .participant-login-card__tag {
-            margin-left: auto; padding: 6px 9px; border: 1px solid #facc15; border-radius: 999px;
-            color: #fff; font-size: 8px; font-weight: 800; letter-spacing: .1em; white-space: nowrap;
-        }
-        .participant-login-card__body { display: flex; align-items: center; gap: 16px; flex: 1; min-height: 0; padding: 13px 18px 10px; }
+        .participant-login-card--front { order: 0; }
+        .participant-login-card--back { order: 1; }
+        .participant-login-card__template { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; }
         .participant-login-card__photo, .participant-login-card__initial {
-            display: flex; align-items: center; justify-content: center; width: 82px; height: 96px; flex: 0 0 auto;
-            border: 3px solid #c7d2fe; border-radius: 12px; background: #eef2ff; color: #1d4ed8;
-            font-size: 27px; font-weight: 800; object-fit: cover;
+            position: absolute; z-index: 2; top: 16.8%; left: 27.6%; width: 44.3%; aspect-ratio: 1;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            border-radius: 50%; background: #e0f2fe; color: #123d70; font-size: 18cqw; font-weight: 800; object-fit: cover;
         }
-        .participant-login-card__details { min-width: 0; flex: 1; }
         .participant-login-card__name {
-            margin: 0 0 3px; overflow: hidden; color: #172554; font-size: 17px; font-weight: 800;
-            line-height: 1.15; text-overflow: ellipsis; white-space: nowrap;
+            position: absolute; z-index: 2; top: 45%; left: 5%; width: 90%; text-align: center; overflow: hidden;
+            color: #123d70; font-size: 6cqw; font-weight: 800; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap;
         }
-        .participant-login-card__designation { margin-bottom: 9px; color: #1d4ed8; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-        .participant-login-card__detail { display: flex; gap: 6px; margin-top: 4px; overflow: hidden; color: #475569; font-size: 9px; line-height: 1.25; }
-        .participant-login-card__detail strong { flex: 0 0 35px; color: #64748b; font-size: 8px; text-transform: uppercase; letter-spacing: .04em; }
-        .participant-login-card__detail span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .participant-login-card__footer {
-            display: flex; align-items: center; justify-content: space-between; min-height: 15%; padding: 7px 18px;
-            color: #eff6ff; background: #101b73; border-top: 2px solid #e32636; font-size: 8px; letter-spacing: .04em;
+        .participant-login-card__designation {
+            position: absolute; z-index: 2; top: 50.3%; left: 5%; width: 90%; text-align: center; overflow: hidden;
+            color: #274b73; font-size: 4cqw; font-weight: 700; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap;
         }
-        .participant-login-card__number { color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .11em; }
+        .participant-login-card__details {
+            position: absolute; z-index: 2; top: 59.5%; left: 24.5%; right: 4%; display: grid;
+            grid-template-rows: repeat(4, 6cqw); color: #172554; font-size: 3.2cqw; font-weight: 600; line-height: 6cqw;
+        }
+        .participant-login-card__detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .participant-login-card--back { box-shadow: 0 22px 55px rgba(30,58,138,.2); }
         @media print {
-            @page { size: 85.6mm 54mm; margin: 0; }
+            @page { size: 54mm 91.8mm; margin: 0; }
             body * { visibility: hidden !important; }
             .participant-login-card-wrap, .participant-login-card-wrap * { visibility: visible !important; }
-            .participant-login-card-wrap { position: fixed; inset: 0; display: block; width: 85.6mm; height: 54mm; margin: 0; padding: 0; }
+            .participant-login-card-wrap { position: absolute; inset: 0 auto auto 0; display: block; width: 54mm; margin: 0; padding: 0; }
             .participant-login-card {
-                width: 85.6mm; height: 54mm; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none;
+                width: 54mm; height: 91.8mm; aspect-ratio: auto; margin: 0; box-shadow: none;
                 print-color-adjust: exact; -webkit-print-color-adjust: exact;
             }
-            .participant-login-card__header { gap: 2.5mm; padding: 2.5mm 3.5mm; }
-            .participant-login-card__logo { width: 11mm; height: 11mm; }
-            .participant-login-card__org { font-size: 8pt; }
-            .participant-login-card__org small { margin-top: .7mm; font-size: 5pt; }
-            .participant-login-card__tag { padding: 1.2mm 1.8mm; font-size: 5pt; }
-            .participant-login-card__body { gap: 3mm; padding: 2.5mm 3.5mm 2mm; }
-            .participant-login-card__photo, .participant-login-card__initial { width: 17mm; height: 21mm; border-width: .6mm; border-radius: 2mm; font-size: 15pt; }
-            .participant-login-card__name { margin-bottom: .5mm; font-size: 10pt; }
-            .participant-login-card__designation { margin-bottom: 1.5mm; font-size: 6pt; }
-            .participant-login-card__detail { gap: 1mm; margin-top: .7mm; font-size: 5.5pt; }
-            .participant-login-card__detail strong { flex-basis: 8mm; font-size: 4.5pt; }
-            .participant-login-card__footer { min-height: 8mm; padding: 1.5mm 3.5mm; font-size: 5pt; }
-            .participant-login-card__number { font-size: 6pt; }
+            .participant-login-card--back { break-before: page; page-break-before: always; }
             .participant-login-card-actions { display: none !important; }
         }
         @media (max-width: 575px) {
             .participant-login-page { padding: 40px 12px; }
             .participant-login-panel { padding: 26px 20px; }
-            .participant-login-card__header { gap: 8px; padding: 10px 12px; }
-            .participant-login-card__logo { width: 42px; height: 42px; }
-            .participant-login-card__org { font-size: 10px; }
-            .participant-login-card__org small { font-size: 6px; }
-            .participant-login-card__tag { padding: 5px 6px; font-size: 6px; }
-            .participant-login-card__body { gap: 10px; padding: 10px 12px; }
-            .participant-login-card__photo, .participant-login-card__initial { width: 64px; height: 78px; }
-            .participant-login-card__name { font-size: 14px; }
-            .participant-login-card__detail { font-size: 8px; }
-            .participant-login-card__footer { padding: 6px 12px; font-size: 7px; }
-            .participant-login-card__number { font-size: 8px; }
         }
     </style>
 
@@ -167,60 +134,25 @@ include_once __DIR__ . '/head.php';
         <div class="container">
             <?php if ($participant !== null): ?>
                 <div class="participant-login-card-wrap">
-                    <div class="participant-login-card" aria-label="Your Jan Kalyan participant ID card front side">
-                        <div class="participant-login-card__header">
-                            <img class="participant-login-card__logo" src="<?= e(base_url('admin/img/logo_white.png')) ?>" alt="Jan Kalyan logo">
-                            <div class="participant-login-card__org">
-                                JAN KALYAN SANGH FOUNDATION
-                                <small>PUBLIC WELFARE • COMMUNITY SERVICE</small>
-                            </div>
-                            <span class="participant-login-card__tag">IDENTITY CARD</span>
-                        </div>
-                        <div class="participant-login-card__body">
-                            <?php if (!empty($participant['profile_photo'])): ?>
-                                <img class="participant-login-card__photo" src="<?= e(img_url((string) $participant['profile_photo'])) ?>" alt="<?= e($participant['full_name']) ?>">
-                            <?php else: ?>
-                                <div class="participant-login-card__initial" aria-hidden="true"><?= e(mb_strtoupper(mb_substr((string) $participant['full_name'], 0, 1))) ?></div>
-                            <?php endif; ?>
-                            <div class="participant-login-card__details">
-                                <h1 class="participant-login-card__name"><?= e($participant['full_name']) ?></h1>
-                                <div class="participant-login-card__designation"><?= e($participant['designation']) ?></div>
-                                <div class="participant-login-card__detail"><strong>Mobile</strong><span><?= e($participant['mobile']) ?></span></div>
-                                <div class="participant-login-card__detail"><strong>Email</strong><span><?= e($participant['email']) ?></span></div>
-                            </div>
-                        </div>
-                        <div class="participant-login-card__footer">
-                            <span>APPROVED PARTICIPANT</span>
-                            <span class="participant-login-card__number">ID: JKSF-<?= e(str_pad((string) $participant['id'], 6, '0', STR_PAD_LEFT)) ?></span>
+                    <div class="participant-login-card participant-login-card--front" aria-label="Your Jan Kalyan participant ID card with QR code and details">
+                        <img class="participant-login-card__template" src="<?= e(base_url('assets/img/idcard/id_card.png?v=5')) ?>" alt="Jan Kalyan ID card template with QR code">
+                        <?php if (!empty($participant['profile_photo'])): ?>
+                            <img class="participant-login-card__photo" src="<?= e(img_url((string) $participant['profile_photo'])) ?>" alt="<?= e($participant['full_name']) ?>">
+                        <?php else: ?>
+                            <div class="participant-login-card__initial" aria-hidden="true"><?= e(mb_strtoupper(mb_substr((string) $participant['full_name'], 0, 1))) ?></div>
+                        <?php endif; ?>
+                        <div class="participant-login-card__name"><?= e($participant['full_name']) ?></div>
+                        <div class="participant-login-card__designation"><?= e($participant['designation']) ?></div>
+                        <div class="participant-login-card__details">
+                            <div class="participant-login-card__detail">JKSF-<?= e(str_pad((string) $participant['id'], 6, '0', STR_PAD_LEFT)) ?></div>
+                            <div class="participant-login-card__detail"><?= e($participant['email']) ?></div>
+                            <div class="participant-login-card__detail"><?= e($participant['mobile']) ?></div>
+                            <div class="participant-login-card__detail"><?= e(fmt_date((string) $participant['dob'], 'd/m/Y')) ?></div>
                         </div>
                     </div>
 
-                    <div class="participant-login-card" aria-label="Your Jan Kalyan participant ID card back side">
-                        <div class="participant-login-card__header">
-                            <img class="participant-login-card__logo" src="<?= e(base_url('admin/img/logo_white.png')) ?>" alt="Jan Kalyan logo">
-                            <div class="participant-login-card__org">
-                                JAN KALYAN SANGH FOUNDATION
-                                <small>PUBLIC WELFARE • COMMUNITY SERVICE</small>
-                            </div>
-                            <span class="participant-login-card__tag">IDENTITY CARD</span>
-                        </div>
-                        <div class="participant-login-card__body">
-                            <?php if (!empty($participant['profile_photo'])): ?>
-                                <img class="participant-login-card__photo" src="<?= e(img_url((string) $participant['profile_photo'])) ?>" alt="<?= e($participant['full_name']) ?>">
-                            <?php else: ?>
-                                <div class="participant-login-card__initial" aria-hidden="true"><?= e(mb_strtoupper(mb_substr((string) $participant['full_name'], 0, 1))) ?></div>
-                            <?php endif; ?>
-                            <div class="participant-login-card__details">
-                                <h1 class="participant-login-card__name"><?= e($participant['full_name']) ?></h1>
-                                <div class="participant-login-card__designation"><?= e($participant['designation']) ?></div>
-                                <div class="participant-login-card__detail"><strong>Mobile</strong><span><?= e($participant['mobile']) ?></span></div>
-                                <div class="participant-login-card__detail"><strong>Email</strong><span><?= e($participant['email']) ?></span></div>
-                            </div>
-                        </div>
-                        <div class="participant-login-card__footer">
-                            <span>APPROVED PARTICIPANT</span>
-                            <span class="participant-login-card__number">ID: JKSF-<?= e(str_pad((string) $participant['id'], 6, '0', STR_PAD_LEFT)) ?></span>
-                        </div>
+                    <div class="participant-login-card participant-login-card--back" aria-label="Back of your Jan Kalyan participant ID card">
+                        <img class="participant-login-card__template" src="<?= e(base_url('assets/img/idcard/id_card2.png?v=5')) ?>" alt="Jan Kalyan ID card back template">
                     </div>
 
                     <div class="participant-login-card-actions d-flex flex-wrap justify-content-center gap-2">
