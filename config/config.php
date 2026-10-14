@@ -2,22 +2,28 @@
 /**
  * Application configuration.
  *
- * Everything environment-specific lives here and nowhere else, so moving the
- * site to a live server is a one-file change. On Hostinger and most shared
- * hosts the database sits on the same machine as the site, so DB_HOST stays
- * 127.0.0.1 there too — only the name, user and password change.
+ * Environment-specific database settings can be kept in config/local.php,
+ * which is excluded from version control. Without it, local XAMPP defaults
+ * are used.
  *
  * Do not commit real production credentials to version control.
  */
 
 declare(strict_types=1);
 
+$localConfigPath = __DIR__ . '/local.php';
+$localConfig = is_file($localConfigPath) ? require $localConfigPath : [];
+
+if (!is_array($localConfig)) {
+    throw new UnexpectedValueException('config/local.php must return an array.');
+}
+
 /* ---------------------------------------------------------------- database */
-define('DB_HOST', '127.0.0.1');
-define('DB_PORT', 3307);
-define('DB_NAME', 'ngo');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', (string) ($localConfig['DB_HOST'] ?? '127.0.0.1'));
+define('DB_PORT', (int) ($localConfig['DB_PORT'] ?? 3307));
+define('DB_NAME', (string) ($localConfig['DB_NAME'] ?? 'ngo'));
+define('DB_USER', (string) ($localConfig['DB_USER'] ?? 'root'));
+define('DB_PASS', (string) ($localConfig['DB_PASS'] ?? ''));
 define('DB_CHARSET', 'utf8mb4');
 
 /* ------------------------------------------------------------------- paths */
@@ -36,7 +42,7 @@ define('UPLOAD_MAX_BYTES', 5 * 1024 * 1024);
  * Show PHP errors on screen. Turn this off on the live site — a stack trace
  * from a failed query names the database and the table layout.
  */
-define('DEBUG_MODE', true);
+define('DEBUG_MODE', (bool) ($localConfig['DEBUG_MODE'] ?? true));
 
 date_default_timezone_set('Asia/Kolkata');
 
