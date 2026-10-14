@@ -2,8 +2,7 @@
 require_once __DIR__ . '/includes/functions.php';
 $footerAbout = setting('footer_about');
 $contactAddress = setting('contact_address_plain');
-$contactPhone = setting('contact_phone');
-$contactPhoneHref = preg_replace('/[^0-9+]/', '', $contactPhone);
+$contactPhones = contact_phone_numbers(setting('contact_phone'));
 $contactEmail = setting('contact_email');
 $footerSocialLinks = rows(
     'SELECT platform, icon_class, url FROM social_links WHERE status = 1 ORDER BY sort_order ASC, id ASC'
@@ -95,7 +94,9 @@ $footerSocialLinks = rows(
                                         </div>
                                         <div class="content">
                                             <h6>Call Us</h6>
-                                            <a href="tel:<?= e($contactPhoneHref) ?>"><?= e($contactPhone) ?></a>
+                                            <?php foreach ($contactPhones as $contactPhone): ?>
+                                                <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $contactPhone)) ?>"><?= e($contactPhone) ?></a><br>
+                                            <?php endforeach; ?>
                                         </div>
                                     </li>
                                     <li>

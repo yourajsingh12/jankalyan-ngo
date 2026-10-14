@@ -9,6 +9,8 @@ if (!isset($_SESSION['admin_email'])) {
 
 require_once __DIR__ . '/../includes/functions.php';
 
+$teamSections = team_sections();
+
 function team_admin_redirect(): never
 {
     header('Location: team.php');
@@ -63,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $name = trim((string) ($_POST['name'] ?? ''));
     $position = trim((string) ($_POST['position'] ?? ''));
+    $teamSection = (string) ($_POST['team_section'] ?? '');
     $email = trim((string) ($_POST['email'] ?? ''));
     $phone = trim((string) ($_POST['phone'] ?? ''));
     $bio = trim((string) ($_POST['bio'] ?? ''));
@@ -87,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         || mb_strlen($name) > 255
         || $position === ''
         || mb_strlen($position) > 160
+        || !in_array($teamSection, $teamSections, true)
         || ($email !== '' && (mb_strlen($email) > 190 || filter_var($email, FILTER_VALIDATE_EMAIL) === false))
         || mb_strlen($phone) > 32
         || $sortOrder === false
@@ -95,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         || !in_array($status, ['Active', 'Inactive'], true)
         || !$validSocials
     ) {
-        flash('Please enter a valid name, role, email, phone, social link, display order and status.', 'error');
+        flash('Please enter a valid name, role, section, email, phone, social link, display order and status.', 'error');
         team_admin_redirect();
     }
 
@@ -111,11 +115,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($existing === null) {
             q(
-                'INSERT INTO team_members (name, position, email, phone, image, bio, facebook, twitter, linkedin, instagram, sort_order, status)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO team_members (name, position, team_section, email, phone, image, bio, facebook, twitter, linkedin, instagram, sort_order, status)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
                     $name,
                     $position,
+                    $teamSection,
                     $email !== '' ? $email : null,
                     $phone !== '' ? $phone : null,
                     $image !== '' ? $image : null,
@@ -132,12 +137,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             q(
                 'UPDATE team_members
-                    SET name = ?, position = ?, email = ?, phone = ?, image = ?, bio = ?, facebook = ?, twitter = ?,
+                    SET name = ?, position = ?, team_section = ?, email = ?, phone = ?, image = ?, bio = ?, facebook = ?, twitter = ?,
                         linkedin = ?, instagram = ?, sort_order = ?, status = ?
                   WHERE id = ?',
                 [
                     $name,
                     $position,
+                    $teamSection,
                     $email !== '' ? $email : null,
                     $phone !== '' ? $phone : null,
                     $image !== '' ? $image : null,
@@ -178,9 +184,10 @@ if ($editId !== null && $editId !== false) {
 }
 
 $teamMembers = rows(
-    'SELECT id, name, position, email, phone, image, sort_order, status
+    'SELECT id, name, position, team_section, email, phone, image, sort_order, status
        FROM team_members
-      ORDER BY sort_order ASC, id ASC'
+      ORDER BY FIELD(team_section, ?, ?, ?, ?), sort_order ASC, id ASC',
+    $teamSections
 );
 $messages = take_flash();
 ?>
@@ -226,6 +233,14 @@ $messages = take_flash();
                             <div class="col-md-6">
                                 <label for="team-position" class="form-label">Role / designation *</label>
                                 <input id="team-position" class="form-control" name="position" maxlength="160" value="<?= e($selected['position'] ?? '') ?>" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="team-section" class="form-label">Team section *</label>
+                                <select id="team-section" class="form-select" name="team_section" required>
+                                    <?php foreach ($teamSections as $section): ?>
+                                        <option value="<?= e($section) ?>" <?= ($selected['team_section'] ?? 'General Body') === $section ? 'selected' : '' ?>><?= e($section) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="col-md-4">
                                 <label for="team-email" class="form-label">Email</label>
@@ -280,17 +295,18 @@ $messages = take_flash();
                     <div class="table-responsive">
                         <table class="table align-middle" style="min-width:900px;">
                             <thead style="background:#f1f5f9; color:#0f172a;">
-                                <tr><th>ID</th><th>Name</th><th>Role</th><th>Email</th><th>Phone</th><th>Status</th><th>Action</th></tr>
+                                <tr><th>ID</th><th>Name</th><th>Role</th><th>Section</th><th>Email</th><th>Phone</th><th>Status</th><th>Action</th></tr>
                             </thead>
                             <tbody>
                                 <?php if ($teamMembers === []): ?>
-                                    <tr><td colspan="7" class="text-center text-muted py-4">No team members have been added yet.</td></tr>
+                                    <tr><td colspan="8" class="text-center text-muted py-4">No team members have been added yet.</td></tr>
                                 <?php endif; ?>
                                 <?php foreach ($teamMembers as $member): ?>
                                     <tr>
                                         <td><?= e($member['id']) ?></td>
                                         <td><strong><?= e($member['name']) ?></strong></td>
                                         <td><?= e($member['position']) ?></td>
+                                        <td><?= e($member['team_section']) ?></td>
                                         <td><?= e($member['email'] ?? '') ?></td>
                                         <td><?= e($member['phone'] ?? '') ?></td>
                                         <td><span class="badge <?= $member['status'] === 'Active' ? 'bg-success' : 'bg-secondary' ?>"><?= e($member['status']) ?></span></td>

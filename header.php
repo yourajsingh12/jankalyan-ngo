@@ -7,8 +7,7 @@ $socialLinks = rows(
     'SELECT platform, icon_class, url FROM social_links WHERE status = 1 ORDER BY sort_order ASC, id ASC'
 );
 $contactEmail = setting('contact_email');
-$contactPhone = setting('contact_phone');
-$contactPhoneHref = preg_replace('/[^0-9+]/', '', $contactPhone);
+$contactPhones = contact_phone_numbers(setting('contact_phone'));
 $contactAddress = setting('contact_address_plain');
 ?>
 
@@ -170,7 +169,9 @@ $contactAddress = setting('contact_address_plain');
                         </div>
                         <div class="content">
                             <h6>Phone</h6>
-                            <a href="tel:<?= e($contactPhoneHref) ?>"><?= e($contactPhone) ?></a>
+                            <?php foreach ($contactPhones as $contactPhone): ?>
+                                <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $contactPhone)) ?>"><?= e($contactPhone) ?></a><br>
+                            <?php endforeach; ?>
                         </div>
                     </li>
                     <li>

@@ -67,6 +67,14 @@ function last_id(): int
 }
 
 /**
+ * The available groups used to organise team members.
+ */
+function team_sections(): array
+{
+    return ['Administrative Body', 'Head Members', 'General Body', 'Volunteer Team'];
+}
+
+/**
  * Creates the participant table when the database schema has not been
  * installed yet.
  */
@@ -260,6 +268,19 @@ function setting(string $key, string $default = ''): string
     $all = settings();
 
     return isset($all[$key]) && $all[$key] !== '' ? (string) $all[$key] : $default;
+}
+
+/**
+ * Splits the contact phone setting into non-empty phone numbers.
+ */
+function contact_phone_numbers(string $value): array
+{
+    $numbers = preg_split('/\R/', $value);
+
+    return array_values(array_filter(
+        array_map('trim', $numbers === false ? [] : $numbers),
+        static fn(string $number): bool => $number !== ''
+    ));
 }
 
 /**

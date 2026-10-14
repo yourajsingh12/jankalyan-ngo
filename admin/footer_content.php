@@ -23,10 +23,10 @@ $footerFields = [
         'max_length' => 1000,
     ],
     'contact_phone' => [
-        'label' => 'Phone number',
+        'label' => 'Phone numbers (one per line)',
         'group' => 'contact',
         'input_type' => 'text',
-        'max_length' => 40,
+        'max_length' => 500,
     ],
     'contact_email' => [
         'label' => 'Email address',
@@ -48,12 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $field = $footerFields[$key];
         $value = trim((string) ($_POST['value'] ?? ''));
         $exists = row('SELECT setting_key FROM site_settings WHERE setting_key = ?', [$key]) !== null;
+        $phoneNumbers = $key === 'contact_phone' ? contact_phone_numbers($value) : [];
+        $validPhoneNumbers = $phoneNumbers !== [];
+        foreach ($phoneNumbers as $phoneNumber) {
+            if (preg_match('/^\+?[0-9\s().-]{10,25}$/D', $phoneNumber) !== 1) {
+                $validPhoneNumbers = false;
+                break;
+            }
+        }
 
         if (
             $value === ''
             || mb_strlen($value) > $field['max_length']
             || ($key === 'contact_email' && filter_var($value, FILTER_VALIDATE_EMAIL) === false)
-            || ($key === 'contact_phone' && preg_match('/^\+?[0-9\s().-]{10,25}$/D', $value) !== 1)
+            || ($key === 'contact_phone' && !$validPhoneNumbers)
         ) {
             flash('Enter a valid, non-empty value within the field limit.', 'error');
         } elseif (($action === 'add' && $exists) || ($action === 'update' && !$exists)) {
@@ -159,7 +167,9 @@ $messages = take_flash();
                                                 <input type="hidden" name="action" value="update">
                                                 <input type="hidden" name="key" value="<?= e($key) ?>">
                                             </form>
-                                            <?php if ($footerFields[$key]['input_type'] === 'textarea'): ?>
+                                            <?php if ($key === 'contact_phone'): ?>
+                                                <textarea class="form-control" form="<?= e($formId) ?>" name="value" rows="3" maxlength="<?= e($footerFields[$key]['max_length']) ?>" placeholder="Add one phone number per line" required><?= e($value) ?></textarea>
+                                            <?php elseif ($footerFields[$key]['input_type'] === 'textarea'): ?>
                                                 <textarea class="form-control" form="<?= e($formId) ?>" name="value" rows="3" maxlength="<?= e($footerFields[$key]['max_length']) ?>" required><?= e($value) ?></textarea>
                                             <?php else: ?>
                                                 <input class="form-control" form="<?= e($formId) ?>" name="value" maxlength="<?= e($footerFields[$key]['max_length']) ?>" value="<?= e($value) ?>" required>

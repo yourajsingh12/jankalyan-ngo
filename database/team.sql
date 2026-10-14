@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS team_members (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   name        VARCHAR(255) NOT NULL,
   position    VARCHAR(160) NOT NULL,
+  team_section VARCHAR(80) NOT NULL DEFAULT 'General Body',
   email       VARCHAR(190) NULL,
   phone       VARCHAR(32) NULL,
   image       VARCHAR(255) NULL,
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS team_members (
 
 ALTER TABLE team_members
   ADD COLUMN IF NOT EXISTS position   VARCHAR(160) NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS team_section VARCHAR(80) NOT NULL DEFAULT 'General Body',
   ADD COLUMN IF NOT EXISTS email      VARCHAR(190) NULL,
   ADD COLUMN IF NOT EXISTS phone      VARCHAR(32) NULL,
   ADD COLUMN IF NOT EXISTS image      VARCHAR(255) NULL,
